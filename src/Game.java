@@ -29,12 +29,6 @@ public class Game extends JFrame {
 						e.printStackTrace();
 					}
 				}
-				JOptionPane.showMessageDialog(
-						Game.this,
-						"Sorry! You loses.",
-						"You lose!",
-						JOptionPane.WARNING_MESSAGE
-				);
 			}
 		};
 		thread.start();
