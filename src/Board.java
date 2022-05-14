@@ -4,7 +4,7 @@ public class Board {
 	private Cell[][] cells;
 	private final int size;
 	private final int barSize;
-	private Tank tank;
+	private Tank tank1;
 	private Tank tank2;
 	private final Random random = new Random();
 
@@ -17,9 +17,9 @@ public class Board {
 		isOver = false;
 		initCells();
 		initWall();
-//		initBrick();
-//		initSteel();
-//		initTree();
+		initBrick();
+		initSteel();
+		initTree();
 		initTank();
 		initTank2();
 
@@ -36,21 +36,25 @@ public class Board {
 	}
 
 	private void initTank() {
-
-		tank = new Tank(2, 1);
-		cells[2][1].setHaveSteel(false);
-		cells[2][1].setHaveBrick(false);
-		cells[2][1].setHaveTank1(true);
-	}
-	private void initTank2() {
-		tank2 = new Tank(2, size-2);
+		tank1 = new Tank(2, size-2);
 		cells[2][size-2].setHaveSteel(false);
 		cells[2][size-2].setHaveBrick(false);
-		cells[2][size-2].setHaveTank2(true);
+		cells[2][size-2].setHaveTree(false);
+		cells[2][size-2].setHaveTank1(true);
+
+	}
+	private void initTank2() {
+
+
+		tank2 = new Tank(2, 1);
+		cells[2][1].setHaveSteel(false);
+		cells[2][1].setHaveBrick(false);
+		cells[2][1].setHaveTree(false);
+		cells[2][1].setHaveTank2(true);
 	}
 
 	private void initBrick() {
-		for (int i = 0; i <= size * 5; i += 1) {
+		for (int i = 0; i <= size * 3; i += 1) {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
@@ -61,7 +65,7 @@ public class Board {
 	}
 
 	private void initSteel() {
-		for (int i = 0; i <= size * 5; i += 1) {
+		for (int i = 0; i <= size * 2; i += 1) {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
@@ -71,7 +75,7 @@ public class Board {
 		}
 	}
 	private void initTree() {
-		for (int i = 0; i <= size * 5; i += 1) {
+		for (int i = 0; i <= size * 3; i += 1) {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
@@ -94,19 +98,19 @@ public class Board {
 
 
 	public void moveTank1() {
-		int xBefore = tank.getX();
-		int yBefore = tank.getY();
-		Cell cellBeforeMove = getCell(tank.getX(), tank.getY());
-		tank.move();
-		Cell cell = getCell(tank.getX(), tank.getY());
+		int xBefore = tank1.getX();
+		int yBefore = tank1.getY();
+		Cell cellBeforeMove = getCell(tank1.getX(), tank1.getY());
+		tank1.move();
+		Cell cell = getCell(tank1.getX(), tank1.getY());
 		try {
 			if (cell.isHaveBullet()) {
 				cell.setHaveBullet(false);
 				isOver = true;
-			} else if (cell.isHaveWall() || cell.isHaveBrick() || cell.isHaveSteel()||cell.isHaveTank1()) {
+			} else if (cell.isHaveWall() || cell.isHaveBrick() || cell.isHaveSteel()||cell.isHaveTank1() || cell.isHaveTank2()) {
 				cell.setHaveTank1(false);
 				cellBeforeMove.setHaveTank1(true);
-				tank.setPosition(xBefore, yBefore);
+				tank1.setPosition(xBefore, yBefore);
 			} else {
 				cellBeforeMove.setHaveTank1(false);
 				cell.setHaveTank1(true);
@@ -151,7 +155,7 @@ public class Board {
 	}
 
 	public Tank getTank1() {
-		return tank;
+		return tank1;
 	}
 	public Tank getTank2() {
 		return tank2;

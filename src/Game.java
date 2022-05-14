@@ -119,6 +119,10 @@ public class Game extends JFrame {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 			}
+			else if (cell.isHaveTree() && cell.isHaveTank2()) {
+				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
+						CELL_PIXEL_SIZE, Color.BLACK, null);
+			}
 			else if (cell.isHaveTank1())
 			{
 				if (!board.getIsStart()) {
