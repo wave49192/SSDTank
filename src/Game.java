@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
 public class Game extends JFrame {
 	private GridUI gridUI;
@@ -53,7 +52,8 @@ public class Game extends JFrame {
 		if (!board.getIsStart()) {
 			return;
 		}
-		board.move();
+		board.moveTank1();
+		board.moveTank2();
 	}
 
 	class GridUI extends JPanel {
@@ -67,6 +67,12 @@ public class Game extends JFrame {
 		private final Image imageTankSouth;
 		private final Image imageTankWest;
 
+		private final Image imageTankNorth2;
+		private final Image imageTankEast2;
+		private final Image imageTankSouth2;
+		private final Image imageTankWest2;
+
+
 		public GridUI() {
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
 					(boardSize + barSize) * CELL_PIXEL_SIZE));
@@ -77,6 +83,11 @@ public class Game extends JFrame {
 			imageTankWest = new ImageIcon("images/TankWest1.png").getImage();
 			imageTankSouth = new ImageIcon("images/TankSouth1.png").getImage();
 			imageTankEast = new ImageIcon("images/TankEast1.png").getImage();
+
+			imageTankNorth2 = new ImageIcon("images/TankNorth2.png").getImage();
+			imageTankWest2 = new ImageIcon("images/TankWest2.png").getImage();
+			imageTankSouth2 = new ImageIcon("images/TankSouth2.png").getImage();
+			imageTankEast2 = new ImageIcon("images/TankEast2.png").getImage();
 			imageTree = new ImageIcon("images/tree.jpg").getImage();
 		}
 
@@ -98,37 +109,62 @@ public class Game extends JFrame {
 
 			Cell cell = board.getCell(row, col);
 
-			if (cell.isHaveBullet()) {
+			if (cell.isHaveBullet())
+			{
 				g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, null, null);
 
-			} else if (cell.isHaveTree() && cell.isHaveTank()) {
+			}
+			else if (cell.isHaveTree() && cell.isHaveTank1()) {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
-			} else if (cell.isHaveTank()) {
+			}
+			else if (cell.isHaveTank1())
+			{
 				if (!board.getIsStart()) {
 					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank().isMoveNorth) {
+				if (board.getTank1().isMoveNorth) {
 					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank().isMoveSouth) {
+				if (board.getTank1().isMoveSouth) {
 					g.drawImage(imageTankSouth, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank().isMoveWest) {
+				if (board.getTank1().isMoveWest) {
 					g.drawImage(imageTankWest, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank().isMoveEast) {
+				if (board.getTank1().isMoveEast) {
 					g.drawImage(imageTankEast, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-
-
-			} else if (cell.isHaveWall()) {
+			}else if(cell.isHaveTank2())
+			{
+				if (!board.getIsStart()) {
+					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
+				if (board.getTank2().isMoveNorth) {
+					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
+				if (board.getTank2().isMoveSouth) {
+					g.drawImage(imageTankSouth2, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
+				if (board.getTank2().isMoveWest) {
+					g.drawImage(imageTankWest2, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
+				if (board.getTank2().isMoveEast) {
+					g.drawImage(imageTankEast2, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
+			}
+			else if (cell.isHaveWall()) {
 				g.setColor(Color.darkGray);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			} else if (cell.isHaveBrick()) {
@@ -154,23 +190,34 @@ public class Game extends JFrame {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
-				Command c = new CommandTurnNorth(board.getTank());
+				Command c = new CommandTurnNorth(board.getTank1());
 				c.execute();
 			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				Command c = new CommandTurnSouth(board.getTank());
+				Command c = new CommandTurnSouth(board.getTank1());
 				c.execute();
 			} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				Command c = new CommandTurnWest(board.getTank());
+				Command c = new CommandTurnWest(board.getTank1());
 				c.execute();
 			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				Command c = new CommandTurnEast(board.getTank());
+				Command c = new CommandTurnEast(board.getTank1());
 				c.execute();
-			} else {
-				// Don't allow starting when press key except direction key
-				return;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_W) {
+				Command c = new CommandTurnNorth(board.getTank2());
+				c.execute();
+			} else if (e.getKeyCode() == KeyEvent.VK_S) {
+				Command c = new CommandTurnSouth(board.getTank2());
+				c.execute();
+			} else if (e.getKeyCode() == KeyEvent.VK_A) {
+				Command c = new CommandTurnWest(board.getTank2());
+				c.execute();
+			} else if (e.getKeyCode() == KeyEvent.VK_D) {
+				Command c = new CommandTurnEast(board.getTank2());
+				c.execute();
 			}
 			board.setIsStart(true);
 		}
+
 
 	}
 

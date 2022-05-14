@@ -1,7 +1,20 @@
 public class Cell {
-	private boolean haveTank;
+	private boolean haveTank1;
+	private boolean haveTank2;
 	private boolean haveBullet;
 	private boolean haveTree;
+	private boolean haveBrick;
+	private boolean haveSteel;
+	private boolean haveWall;
+
+	public boolean isHaveTank2() {
+		return haveTank2;
+	}
+
+	public void setHaveTank2(boolean haveTank2) {
+		this.haveTank2 = haveTank2;
+	}
+
 
 	public boolean isHaveTree() {
 		return haveTree;
@@ -27,13 +40,10 @@ public class Cell {
 		this.haveSteel = haveSteel;
 	}
 
-	private boolean haveBrick;
-	private boolean haveSteel;
-	private boolean haveWall;
 
 	public Cell() {
 		haveBullet = false;
-		haveTank = false;
+		haveTank1 = false;
 		haveWall = false;
 	}
 
@@ -53,12 +63,12 @@ public class Cell {
 		this.haveBullet = haveBullet;
 	}
 
-	public boolean isHaveTank() {
-		return haveTank;
+	public boolean isHaveTank1() {
+		return haveTank1;
 	}
 
-	public void setHaveTank(boolean haveTank) {
-		this.haveTank = haveTank;
+	public void setHaveTank1(boolean haveTank1) {
+		this.haveTank1 = haveTank1;
 	}
 
 }

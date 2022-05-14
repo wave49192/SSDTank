@@ -4,7 +4,7 @@ public abstract class WObject {
 
 	private int dx;
 	private int dy;
-	boolean isMoveNorth = false;
+	boolean isMoveNorth = true;
 	boolean isMoveSouth = false;
 	boolean isMoveEast = false;
 	boolean isMoveWest = false;
