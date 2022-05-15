@@ -25,6 +25,7 @@ public class Game extends JFrame {
 		board = new Board(boardSize, barSize);
 		tankAudioController = new TankAudioController(board.getTank1());
 		tankAudioController.initialSound();
+
 		gridUI = new GridUI();
 		thread = new Thread() {
 			@Override
@@ -34,7 +35,7 @@ public class Game extends JFrame {
 					moving();
 					tankAudioController.playTankMovementSound();
 					try {
-						Thread.sleep(500);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -66,15 +67,18 @@ public class Game extends JFrame {
 		private final Image imageSteel;
 		private final Image imageTree;
 		private final Image imageBullet;
-		private final Image imageTankNorth;
-		private final Image imageTankEast;
-		private final Image imageTankSouth;
-		private final Image imageTankWest;
+		private final Image imageTankNorth1;
+		private final Image imageTankEast1;
+		private final Image imageTankSouth1;
+		private final Image imageTankWest1;
 
 		private final Image imageTankNorth2;
 		private final Image imageTankEast2;
 		private final Image imageTankSouth2;
 		private final Image imageTankWest2;
+
+		private Image lastTank1Move;
+		private Image lastTank2Move;
 
 
 		public GridUI() {
@@ -83,16 +87,18 @@ public class Game extends JFrame {
 			imageBrick = new ImageIcon("images/break_brick.jpg").getImage();
 			imageSteel = new ImageIcon("images/solid_brick.jpg").getImage();
 			imageBullet = new ImageIcon("images/Bullet.png").getImage();
-			imageTankNorth = new ImageIcon("images/TankNorth1.png").getImage();
-			imageTankWest = new ImageIcon("images/TankWest1.png").getImage();
-			imageTankSouth = new ImageIcon("images/TankSouth1.png").getImage();
-			imageTankEast = new ImageIcon("images/TankEast1.png").getImage();
+			imageTankNorth1 = new ImageIcon("images/TankNorth1.png").getImage();
+			imageTankWest1 = new ImageIcon("images/TankWest1.png").getImage();
+			imageTankSouth1 = new ImageIcon("images/TankSouth1.png").getImage();
+			imageTankEast1 = new ImageIcon("images/TankEast1.png").getImage();
 
 			imageTankNorth2 = new ImageIcon("images/TankNorth2.png").getImage();
 			imageTankWest2 = new ImageIcon("images/TankWest2.png").getImage();
 			imageTankSouth2 = new ImageIcon("images/TankSouth2.png").getImage();
 			imageTankEast2 = new ImageIcon("images/TankEast2.png").getImage();
 			imageTree = new ImageIcon("images/tree.jpg").getImage();
+			lastTank1Move = imageTankNorth1;
+			lastTank2Move = imageTankNorth2;
 		}
 
 		@Override
@@ -115,38 +121,39 @@ public class Game extends JFrame {
 			if (cell.isBush() && cell.isContainTank(board.getTank1())) {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
-			}
-			else if (cell.isBush() && cell.isContainTank(board.getTank2())) {
+			} else if (cell.isBush() && cell.isContainTank(board.getTank2())) {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
-			}
-			else if (cell.isContainTank(board.getTank1())) {
+			} else if (cell.isContainTank(board.getTank1())) {
 				if (!board.getIsStart()) {
-					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
+					g.drawImage(imageTankNorth1, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
 				if (board.getTank1().isMoveNorth()) {
-					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
+					g.drawImage(imageTankNorth1, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank1Move = imageTankNorth1;
 				}
 				if (board.getTank1().isMoveSouth()) {
-					g.drawImage(imageTankSouth, x, y, CELL_PIXEL_SIZE,
+					g.drawImage(imageTankSouth1, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank1Move = imageTankSouth1;
 				}
 				if (board.getTank1().isMoveWest()) {
-					g.drawImage(imageTankWest, x, y, CELL_PIXEL_SIZE,
+					g.drawImage(imageTankWest1, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank1Move = imageTankWest1;
 				}
 				if (board.getTank1().isMoveEast()) {
-					g.drawImage(imageTankEast, x, y, CELL_PIXEL_SIZE,
+					g.drawImage(imageTankEast1, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank1Move = imageTankEast1;
 				}
 				if (board.getTank1().isIdle()) {
-					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
+					g.drawImage(lastTank1Move, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-			}
-			else if(cell.isContainTank(board.getTank2())) {
+			} else if (cell.isContainTank(board.getTank2())) {
 				if (!board.getIsStart()) {
 					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
@@ -154,25 +161,28 @@ public class Game extends JFrame {
 				if (board.getTank2().isMoveNorth()) {
 					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank2Move = imageTankNorth2;
 				}
 				if (board.getTank2().isMoveSouth()) {
 					g.drawImage(imageTankSouth2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank2Move = imageTankSouth2;
 				}
 				if (board.getTank2().isMoveWest()) {
 					g.drawImage(imageTankWest2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank2Move = imageTankWest2;
 				}
 				if (board.getTank2().isMoveEast()) {
 					g.drawImage(imageTankEast2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank2Move = imageTankEast2;
 				}
 				if (board.getTank2().isIdle()) {
-					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
+					g.drawImage(lastTank2Move, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-			}
-			else if (cell.isWall()) {
+			} else if (cell.isWall()) {
 				g.setColor(Color.darkGray);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			} else if (cell.isBrick()) {
@@ -236,14 +246,14 @@ public class Game extends JFrame {
 			if (e.getKeyCode() == KeyEvent.VK_UP ||
 					e.getKeyCode() == KeyEvent.VK_DOWN ||
 					e.getKeyCode() == KeyEvent.VK_LEFT ||
-					e.getKeyCode() ==KeyEvent.VK_RIGHT) {
+					e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				Command c = new CommandStop(board.getTank1());
 				c.execute();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_W ||
 					e.getKeyCode() == KeyEvent.VK_S ||
 					e.getKeyCode() == KeyEvent.VK_A ||
-					e.getKeyCode() ==KeyEvent.VK_D) {
+					e.getKeyCode() == KeyEvent.VK_D) {
 				Command c = new CommandStop(board.getTank2());
 				c.execute();
 			}
