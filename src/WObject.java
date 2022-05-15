@@ -4,10 +4,6 @@ public abstract class WObject {
 
 	private int dx;
 	private int dy;
-	boolean isMoveNorth = true;
-	boolean isMoveSouth = false;
-	boolean isMoveEast = false;
-	boolean isMoveWest = false;
 
 	public WObject(int x, int y) {
 		this.x = x;
@@ -15,38 +11,21 @@ public abstract class WObject {
 	}
 
 	public void turnNorth() {
-		isMoveNorth = true;
-		isMoveSouth = false;
-		isMoveEast = false;
-		isMoveWest = false;
 		dx = -1;
 		dy = 0;
 	}
 
 	public void turnSouth() {
-		isMoveNorth = false;
-		isMoveSouth = true;
-		isMoveEast = false;
-		isMoveWest = false;
 		dx = 1;
 		dy = 0;
 	}
 
 	public void turnWest() {
-		isMoveNorth = false;
-		isMoveSouth = false;
-		isMoveEast = false;
-		isMoveWest = true;
 		dx = 0;
 		dy = -1;
 	}
 
 	public void turnEast() {
-
-		isMoveNorth = false;
-		isMoveSouth = false;
-		isMoveEast = true;
-		isMoveWest = false;
 		dx = 0;
 		dy = 1;
 	}
@@ -69,7 +48,18 @@ public abstract class WObject {
 		return y;
 	}
 
-//	public boolean getIsMoveVertical() { return isMoveVertical; };
+	public int getDx() { return dx; }
+
+	public int getDy() { return dy; }
+
+	public boolean isMoveNorth() { return dx == -1 && dy == 0; }
+
+	public boolean isMoveSouth() { return dx == 1 && dy == 0; }
+
+	public boolean isMoveWest() { return dx == 0 && dy == -1; }
+
+	public boolean isMoveEast() { return dx == 0 && dy == 1; }
+	//	public boolean getIsMoveVertical() { return isMoveVertical; };
 //
 //	public boolean getIsMoveHorizontal() { return isMoveHorizontal; };
 

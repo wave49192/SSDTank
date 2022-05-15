@@ -102,7 +102,6 @@ public class Game extends JFrame {
 			int y = row * CELL_PIXEL_SIZE;
 
 			Cell cell = board.getCell(row, col);
-
 			if (cell.isHaveBullet())
 			{
 				g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
@@ -123,19 +122,19 @@ public class Game extends JFrame {
 					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank1().isMoveNorth) {
+				if (board.getTank1().isMoveNorth()) {
 					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank1().isMoveSouth) {
+				if (board.getTank1().isMoveSouth()) {
 					g.drawImage(imageTankSouth, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank1().isMoveWest) {
+				if (board.getTank1().isMoveWest()) {
 					g.drawImage(imageTankWest, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank1().isMoveEast) {
+				if (board.getTank1().isMoveEast()) {
 					g.drawImage(imageTankEast, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
@@ -145,19 +144,19 @@ public class Game extends JFrame {
 					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank2().isMoveNorth) {
+				if (board.getTank2().isMoveNorth()) {
 					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank2().isMoveSouth) {
+				if (board.getTank2().isMoveSouth()) {
 					g.drawImage(imageTankSouth2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank2().isMoveWest) {
+				if (board.getTank2().isMoveWest()) {
 					g.drawImage(imageTankWest2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				if (board.getTank2().isMoveEast) {
+				if (board.getTank2().isMoveEast()) {
 					g.drawImage(imageTankEast2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
