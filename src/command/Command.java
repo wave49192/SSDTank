@@ -1,3 +1,7 @@
+package command;
+
+import GameObject.Tank;
+
 public abstract class Command {
 	private Tank tank;
 	public Command(Tank tank){

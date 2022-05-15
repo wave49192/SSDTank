@@ -1,3 +1,5 @@
+package GameObject;
+
 public abstract class WObject {
 	private int x;
 	private int y;
@@ -59,8 +61,5 @@ public abstract class WObject {
 	public boolean isMoveWest() { return dx == 0 && dy == -1; }
 
 	public boolean isMoveEast() { return dx == 0 && dy == 1; }
-	//	public boolean getIsMoveVertical() { return isMoveVertical; };
-//
-//	public boolean getIsMoveHorizontal() { return isMoveHorizontal; };
 
 }

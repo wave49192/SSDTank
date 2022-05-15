@@ -1,3 +1,5 @@
+import command.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -89,7 +91,7 @@ public class Game extends JFrame {
 		public void paint(Graphics g) {
 			super.paint(g);
 
-			g.drawString("Tank Game", 10, 20);
+			g.drawString("WObject.Tank Game", 10, 20);
 			for (int row = barSize; row < boardSize + barSize; ++row) {
 				for (int col = 0; col < boardSize; ++col) {
 					paintCell(g, row, col);

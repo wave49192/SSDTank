@@ -1,3 +1,7 @@
+package command;
+
+import GameObject.Tank;
+
 public class CommandTurnEast extends Command{
 	public CommandTurnEast(Tank tank){super(tank);}
 	@Override

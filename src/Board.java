@@ -1,3 +1,5 @@
+import GameObject.Tank;
+
 import java.util.Random;
 
 public class Board {
