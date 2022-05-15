@@ -1,4 +1,6 @@
 import GameObject.Cell;
+import audio.Sound;
+import audio.TankAudioController;
 import command.*;
 
 import javax.swing.*;
@@ -8,17 +10,21 @@ import java.awt.event.KeyEvent;
 
 public class Game extends JFrame {
 	private GridUI gridUI;
+	private TankAudioController tankAudioController;
 	private Thread thread;
 
 	private Board board;
 	private int boardSize = 20;
 	private int barSize = 1;
 	private Controller controller;
+	Sound sound = new Sound();
 
 	public Game() {
 		controller = new Controller();
 		addKeyListener(controller);
 		board = new Board(boardSize, barSize);
+		tankAudioController = new TankAudioController(board.getTank1());
+		tankAudioController.initialSound();
 		gridUI = new GridUI();
 		thread = new Thread() {
 			@Override
@@ -26,6 +32,7 @@ public class Game extends JFrame {
 				while (!board.getIsOver()) {
 					gridUI.repaint();
 					moving();
+					tankAudioController.playTankMovementSound();
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
