@@ -67,15 +67,6 @@ public class Game extends JFrame {
 		private final Image imageSteel;
 		private final Image imageTree;
 		private final Image imageBullet;
-		private final Image imageTankNorth1;
-		private final Image imageTankEast1;
-		private final Image imageTankSouth1;
-		private final Image imageTankWest1;
-
-		private final Image imageTankNorth2;
-		private final Image imageTankEast2;
-		private final Image imageTankSouth2;
-		private final Image imageTankWest2;
 
 		private Image lastTank1Move;
 		private Image lastTank2Move;
@@ -87,18 +78,10 @@ public class Game extends JFrame {
 			imageBrick = new ImageIcon("images/break_brick.jpg").getImage();
 			imageSteel = new ImageIcon("images/solid_brick.jpg").getImage();
 			imageBullet = new ImageIcon("images/Bullet.png").getImage();
-			imageTankNorth1 = new ImageIcon("images/TankNorth1.png").getImage();
-			imageTankWest1 = new ImageIcon("images/TankWest1.png").getImage();
-			imageTankSouth1 = new ImageIcon("images/TankSouth1.png").getImage();
-			imageTankEast1 = new ImageIcon("images/TankEast1.png").getImage();
 
-			imageTankNorth2 = new ImageIcon("images/TankNorth2.png").getImage();
-			imageTankWest2 = new ImageIcon("images/TankWest2.png").getImage();
-			imageTankSouth2 = new ImageIcon("images/TankSouth2.png").getImage();
-			imageTankEast2 = new ImageIcon("images/TankEast2.png").getImage();
 			imageTree = new ImageIcon("images/tree.jpg").getImage();
-			lastTank1Move = imageTankNorth1;
-			lastTank2Move = imageTankNorth2;
+			lastTank1Move = board.getTank1().getState().getImage();
+			lastTank2Move = board.getTank2().getState().getImage();
 		}
 
 		@Override
@@ -125,62 +108,22 @@ public class Game extends JFrame {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 			} else if (cell.isContainTank(board.getTank1())) {
-				if (!board.getIsStart()) {
-					g.drawImage(imageTankNorth1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-				}
-				if (board.getTank1().isMoveNorth()) {
-					g.drawImage(imageTankNorth1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankNorth1;
-				}
-				if (board.getTank1().isMoveSouth()) {
-					g.drawImage(imageTankSouth1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankSouth1;
-				}
-				if (board.getTank1().isMoveWest()) {
-					g.drawImage(imageTankWest1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankWest1;
-				}
-				if (board.getTank1().isMoveEast()) {
-					g.drawImage(imageTankEast1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankEast1;
-				}
 				if (board.getTank1().isIdle()) {
 					g.drawImage(lastTank1Move, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+				} else {
+					g.drawImage(board.getTank1().getState().getImage(), x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank1Move = board.getTank1().getState().getImage();
 				}
 			} else if (cell.isContainTank(board.getTank2())) {
-				if (!board.getIsStart()) {
-					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-				}
-				if (board.getTank2().isMoveNorth()) {
-					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankNorth2;
-				}
-				if (board.getTank2().isMoveSouth()) {
-					g.drawImage(imageTankSouth2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankSouth2;
-				}
-				if (board.getTank2().isMoveWest()) {
-					g.drawImage(imageTankWest2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankWest2;
-				}
-				if (board.getTank2().isMoveEast()) {
-					g.drawImage(imageTankEast2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankEast2;
-				}
 				if (board.getTank2().isIdle()) {
 					g.drawImage(lastTank2Move, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+				} else {
+					g.drawImage(board.getTank2().getState().getImage(), x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+					lastTank2Move = board.getTank2().getState().getImage();
 				}
 			} else if (cell.isWall()) {
 				g.setColor(Color.darkGray);

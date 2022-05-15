@@ -36,10 +36,10 @@ public class Board {
 	}
 
 	private void initTank() {
-		tank1 = new Tank(2, size-2);
+		tank1 = new Tank(2, size-2, 1);
 	}
 	private void initTank2() {
-		tank2 = new Tank(2, 1);
+		tank2 = new Tank(2, 1, 2);
 	}
 
 	private boolean hasTank(Cell cell) {
@@ -89,7 +89,7 @@ public class Board {
 	}
 
 	public boolean canMoveTank(Tank tank, Tank otherTank) {
-		Cell nextCell = getCell(tank.getX() + tank.getDx(), tank.getY() + tank.getDy());
+		Cell nextCell = getCell(tank.getX() + tank.getState().getDx(), tank.getY() + tank.getState().getDy());
 		return !(nextCell.isContainTank(otherTank) || nextCell.isBrick() || nextCell.isWall() || nextCell.isSteel());
 	}
 
