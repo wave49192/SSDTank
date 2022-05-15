@@ -24,12 +24,6 @@ public class Board {
 		initTree();
 		initTank();
 		initTank2();
-
-		for (int row = barSize; row < size + barSize; ++row) {
-			for (int col = 0; col < size; ++col) {
-				System.out.println(cells[row][col].getClass().getName());
-			}
-		}
 	}
 
 	private void initCells() {
