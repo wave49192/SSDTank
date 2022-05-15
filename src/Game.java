@@ -34,7 +34,7 @@ public class Game extends JFrame {
 					moving();
 					tankAudioController.playTankMovementSound();
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -198,30 +198,55 @@ public class Game extends JFrame {
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
 				Command c = new CommandTurnNorth(board.getTank1());
 				c.execute();
-			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 				Command c = new CommandTurnSouth(board.getTank1());
 				c.execute();
-			} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			}
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				Command c = new CommandTurnWest(board.getTank1());
 				c.execute();
-			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			}
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				Command c = new CommandTurnEast(board.getTank1());
 				c.execute();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_W) {
 				Command c = new CommandTurnNorth(board.getTank2());
 				c.execute();
-			} else if (e.getKeyCode() == KeyEvent.VK_S) {
+			}
+			if (e.getKeyCode() == KeyEvent.VK_S) {
 				Command c = new CommandTurnSouth(board.getTank2());
 				c.execute();
-			} else if (e.getKeyCode() == KeyEvent.VK_A) {
+			}
+			if (e.getKeyCode() == KeyEvent.VK_A) {
 				Command c = new CommandTurnWest(board.getTank2());
 				c.execute();
-			} else if (e.getKeyCode() == KeyEvent.VK_D) {
+			}
+			if (e.getKeyCode() == KeyEvent.VK_D) {
 				Command c = new CommandTurnEast(board.getTank2());
 				c.execute();
 			}
 			board.setIsStart(true);
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			super.keyReleased(e);
+			if (e.getKeyCode() == KeyEvent.VK_UP ||
+					e.getKeyCode() == KeyEvent.VK_DOWN ||
+					e.getKeyCode() == KeyEvent.VK_LEFT ||
+					e.getKeyCode() ==KeyEvent.VK_RIGHT) {
+				Command c = new CommandStop(board.getTank1());
+				c.execute();
+			}
+			if (e.getKeyCode() == KeyEvent.VK_W ||
+					e.getKeyCode() == KeyEvent.VK_S ||
+					e.getKeyCode() == KeyEvent.VK_A ||
+					e.getKeyCode() ==KeyEvent.VK_D) {
+				Command c = new CommandStop(board.getTank2());
+				c.execute();
+			}
 		}
 	}
 

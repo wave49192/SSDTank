@@ -42,6 +42,10 @@ public class Board {
 		tank2 = new Tank(2, 1);
 	}
 
+	private boolean hasTank(Cell cell) {
+		return cell.isContainTank(tank1) && cell.isContainTank(tank2);
+	}
+
 	private void initBrick() {
 		for (int i = 0; i <= size * 3; i += 1) {
 			int row = random.nextInt(size) + barSize;
@@ -90,20 +94,14 @@ public class Board {
 	}
 
 	public void moveTank1() {
-		if (canMoveTank(tank1, tank2) && !tank1.isIdle()) {
+		if (canMoveTank(tank1, tank2)) {
 			tank1.move();
-		}
-		else {
-			tank1.stop();
 		}
 	}
 
 	public void moveTank2() {
 		if (canMoveTank(tank2, tank1) && !tank2.isIdle()) {
 			tank2.move();
-		}
-		else {
-			tank2.stop();
 		}
 	}
 
