@@ -1,4 +1,4 @@
-import GameObject.Tank;
+import GameObject.*;
 
 import java.util.Random;
 
@@ -25,34 +25,27 @@ public class Board {
 		initTank();
 		initTank2();
 
-
+		for (int row = barSize; row < size + barSize; ++row) {
+			for (int col = 0; col < size; ++col) {
+				System.out.println(cells[row][col].getClass().getName());
+			}
+		}
 	}
 
 	private void initCells() {
 		cells = new Cell[size + barSize][size];
 		for (int row = barSize; row < size + barSize; ++row) {
 			for (int col = 0; col < size; ++col) {
-				cells[row][col] = new Cell();
+				cells[row][col] = new Cell(row, col);
 			}
 		}
 	}
 
 	private void initTank() {
 		tank1 = new Tank(2, size-2);
-		cells[2][size-2].setHaveSteel(false);
-		cells[2][size-2].setHaveBrick(false);
-		cells[2][size-2].setHaveTree(false);
-		cells[2][size-2].setHaveTank1(true);
-
 	}
 	private void initTank2() {
-
-
 		tank2 = new Tank(2, 1);
-		cells[2][1].setHaveSteel(false);
-		cells[2][1].setHaveBrick(false);
-		cells[2][1].setHaveTree(false);
-		cells[2][1].setHaveTank2(true);
 	}
 
 	private void initBrick() {
@@ -60,8 +53,8 @@ public class Board {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
-			if (!cell.isHaveWall() || !cell.isHaveBrick()) {
-				cell.setHaveBrick(true);
+			if (!cell.isWall() && !cell.isBrick()) {
+				cells[row][col] = new Brick(row, col);
 			}
 		}
 	}
@@ -71,8 +64,8 @@ public class Board {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
-			if (!cell.isHaveWall() || !cell.isHaveBrick() || !cell.isHaveSteel()) {
-				cell.setHaveSteel(true);
+			if (!cell.isWall() && !cell.isBrick()) {
+				cells[row][col] = new Steel(row, col);
 			}
 		}
 	}
@@ -81,8 +74,8 @@ public class Board {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
-			if (!cell.isHaveWall() || !cell.isHaveBrick() || !cell.isHaveSteel()) {
-				cell.setHaveTree(true);
+			if (!cell.isWall() && !cell.isBrick() && !cell.isSteel()) {
+				cells[row][col] = new Bush(row, col);
 			}
 		}
 	}
@@ -90,62 +83,33 @@ public class Board {
 
 	private void initWall() {
 		for (int i = 0; i <= size - 1; i++) {
-			cells[1][i].setHaveWall(true);
-			cells[size][i].setHaveWall(true);
-			cells[i + 1][0].setHaveWall(true);
-			cells[i + 1][size - 1].setHaveWall(true);
+			cells[1][i] = new Wall(1, i);
+			cells[size][i] = new Wall(size, i);
+			cells[i + 1][0] = new Wall(i + 1, 0);
+			cells[i + 1][size - 1] = new Wall(i + 1, size - 1);
 		}
-
 	}
 
+	public boolean canMoveTank(Tank tank, Tank otherTank) {
+		Cell nextCell = getCell(tank.getX() + tank.getDx(), tank.getY() + tank.getDy());
+		return !(nextCell.isContainTank(otherTank) || nextCell.isBrick() || nextCell.isWall() || nextCell.isSteel());
+	}
 
 	public void moveTank1() {
-		int xBefore = tank1.getX();
-		int yBefore = tank1.getY();
-		Cell cellBeforeMove = getCell(tank1.getX(), tank1.getY());
-		tank1.move();
-		Cell cell = getCell(tank1.getX(), tank1.getY());
-		try {
-			if (cell.isHaveBullet()) {
-				cell.setHaveBullet(false);
-				isOver = true;
-			} else if (cell.isHaveWall() || cell.isHaveBrick() || cell.isHaveSteel()||cell.isHaveTank1() || cell.isHaveTank2()) {
-				cell.setHaveTank1(false);
-				cellBeforeMove.setHaveTank1(true);
-				tank1.setPosition(xBefore, yBefore);
-			} else {
-				cellBeforeMove.setHaveTank1(false);
-				cell.setHaveTank1(true);
-
-			}
-		} catch (Exception e) {
-			e.fillInStackTrace();
-			isOver = true;
+		if (canMoveTank(tank1, tank2) && !tank1.isIdle()) {
+			tank1.move();
+		}
+		else {
+			tank1.stop();
 		}
 	}
 
 	public void moveTank2() {
-		int xBefore = tank2.getX();
-		int yBefore = tank2.getY();
-		Cell cellBeforeMove = getCell(tank2.getX(), tank2.getY());
-		tank2.move();
-		Cell cell = getCell(tank2.getX(), tank2.getY());
-		try {
-			if (cell.isHaveBullet()) {
-				cell.setHaveBullet(false);
-				isOver = true;
-			} else if (cell.isHaveWall() || cell.isHaveBrick() || cell.isHaveSteel()||cell.isHaveTank2()) {
-				cell.setHaveTank2(false);
-				cellBeforeMove.setHaveTank2(true);
-				tank2.setPosition(xBefore, yBefore);
-			} else {
-				cellBeforeMove.setHaveTank2(false);
-				cell.setHaveTank2(true);
-
-			}
-		} catch (Exception e) {
-			e.fillInStackTrace();
-			isOver = true;
+		if (canMoveTank(tank2, tank1) && !tank2.isIdle()) {
+			tank2.move();
+		}
+		else {
+			tank2.stop();
 		}
 	}
 
@@ -162,8 +126,6 @@ public class Board {
 	public Tank getTank2() {
 		return tank2;
 	}
-
-
 
 	public boolean getIsOver() {
 		return isOver;

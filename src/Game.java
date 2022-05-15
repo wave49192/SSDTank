@@ -1,3 +1,4 @@
+import GameObject.Cell;
 import command.*;
 
 import javax.swing.*;
@@ -104,22 +105,15 @@ public class Game extends JFrame {
 			int y = row * CELL_PIXEL_SIZE;
 
 			Cell cell = board.getCell(row, col);
-			if (cell.isHaveBullet())
-			{
-				g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
-						CELL_PIXEL_SIZE, null, null);
-
-			}
-			else if (cell.isHaveTree() && cell.isHaveTank1()) {
+			if (cell.isBush() && cell.isContainTank(board.getTank1())) {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 			}
-			else if (cell.isHaveTree() && cell.isHaveTank2()) {
+			else if (cell.isBush() && cell.isContainTank(board.getTank2())) {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 			}
-			else if (cell.isHaveTank1())
-			{
+			else if (cell.isContainTank(board.getTank1())) {
 				if (!board.getIsStart()) {
 					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
@@ -140,8 +134,12 @@ public class Game extends JFrame {
 					g.drawImage(imageTankEast, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-			}else if(cell.isHaveTank2())
-			{
+				if (board.getTank1().isIdle()) {
+					g.drawImage(imageTankNorth, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
+			}
+			else if(cell.isContainTank(board.getTank2())) {
 				if (!board.getIsStart()) {
 					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
@@ -162,18 +160,22 @@ public class Game extends JFrame {
 					g.drawImage(imageTankEast2, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
+				if (board.getTank2().isIdle()) {
+					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
 			}
-			else if (cell.isHaveWall()) {
+			else if (cell.isWall()) {
 				g.setColor(Color.darkGray);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
-			} else if (cell.isHaveBrick()) {
+			} else if (cell.isBrick()) {
 				g.drawImage(imageBrick, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
-			} else if (cell.isHaveSteel()) {
+			} else if (cell.isSteel()) {
 				g.drawImage(imageSteel, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 
-			} else if (cell.isHaveTree()) {
+			} else if (cell.isBush()) {
 				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 			} else {
@@ -181,8 +183,6 @@ public class Game extends JFrame {
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			}
 		}
-
-
 	}
 
 	class Controller extends KeyAdapter {
@@ -216,8 +216,6 @@ public class Game extends JFrame {
 			}
 			board.setIsStart(true);
 		}
-
-
 	}
 
 	public static void main(String[] args) {
