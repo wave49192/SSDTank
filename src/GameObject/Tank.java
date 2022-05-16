@@ -1,5 +1,7 @@
 package GameObject;
 
+import GameObject.state.State;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -42,20 +44,6 @@ public class Tank extends WObject{
 	public boolean isIdle() { return checkState("IdleState"); }
 
 	public State getState() { return state; }
-
-	abstract public class State {
-		private int dx;
-		private int dy;
-		private Image image;
-
-		public int getDx() { return dx; }
-		public int getDy() { return dy; }
-		public void setDx(int dx) { this.dx = dx; }
-		public void setDy(int dy) { this.dy = dy; }
-
-		public Image getImage() { return image; }
-		public void setImage(Image image) { this.image = image; }
-	}
 
 	public class TurnNorthState extends State {
 		public TurnNorthState() {
