@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tank extends WObject{
+public class Tank extends WObject {
 	private State state;
 	private final int playerNumber;
 	private BulletPool bulletPool;
@@ -22,15 +22,25 @@ public class Tank extends WObject{
 		bullets = new ArrayList<>();
 	}
 
-	public void turnNorth() { state = new TurnNorthState(); }
+	public void turnNorth() {
+		state = new TurnNorthState();
+	}
 
-	public void turnSouth() { state = new TurnSouthState(); }
+	public void turnSouth() {
+		state = new TurnSouthState();
+	}
 
-	public void turnWest() { state = new TurnWestState(); }
+	public void turnWest() {
+		state = new TurnWestState();
+	}
 
-	public void turnEast() { state = new TurnEastState(); }
+	public void turnEast() {
+		state = new TurnEastState();
+	}
 
-	public void stop() { state = new IdleState(); }
+	public void stop() {
+		state = new IdleState();
+	}
 
 	public void move() {
 		setX(getX() + state.getDx());
@@ -39,10 +49,15 @@ public class Tank extends WObject{
 
 	public void shoot() {
 		Bullet b = bulletPool.requestBullet(getX(), getY());
-		if (isMoveNorth()) { b.turnNorth(); }
-		else if (isMoveSouth()) { b.turnSouth(); }
-		else if (isMoveEast()) { b.turnEast(); }
-		else if (isMoveWest()) { b.turnWest(); }
+		if (isMoveNorth()) {
+			b.turnNorth();
+		} else if (isMoveSouth()) {
+			b.turnSouth();
+		} else if (isMoveEast()) {
+			b.turnEast();
+		} else if (isMoveWest()) {
+			b.turnWest();
+		}
 		bullets.add(b);
 	}
 
@@ -50,21 +65,37 @@ public class Tank extends WObject{
 		return state.getClass().getName().equals("GameObject.Tank$" + stateName);
 	}
 
-	public boolean isMoveNorth() { return checkState("TurnNorthState"); }
+	public boolean isMoveNorth() {
+		return checkState("TurnNorthState");
+	}
 
-	public boolean isMoveSouth() { return checkState("TurnSouthState"); }
+	public boolean isMoveSouth() {
+		return checkState("TurnSouthState");
+	}
 
-	public boolean isMoveWest() { return checkState("TurnWestState"); }
+	public boolean isMoveWest() {
+		return checkState("TurnWestState");
+	}
 
-	public boolean isMoveEast() { return checkState("TurnEastState"); }
+	public boolean isMoveEast() {
+		return checkState("TurnEastState");
+	}
 
-	public boolean isIdle() { return checkState("IdleState"); }
+	public boolean isIdle() {
+		return checkState("IdleState");
+	}
 
-	public State getState() { return state; }
+	public State getState() {
+		return state;
+	}
 
-	public List<Bullet> getBullets() { return bullets; }
+	public List<Bullet> getBullets() {
+		return bullets;
+	}
 
-	public BulletPool getBulletPool() { return bulletPool; }
+	public BulletPool getBulletPool() {
+		return bulletPool;
+	}
 
 	public class TurnNorthState extends State {
 		public TurnNorthState() {

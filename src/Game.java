@@ -69,7 +69,7 @@ public class Game extends JFrame {
 	}
 
 	private void moveBullets() {
-		for (Tank tank: board.playerTanks) {
+		for (Tank tank : board.playerTanks) {
 			for (Bullet bullet : tank.getBullets()) {
 				bullet.move();
 				gridUI.repaint();
@@ -80,8 +80,8 @@ public class Game extends JFrame {
 
 	private void cleanupBullets() {
 		List<Bullet> toRemove = new ArrayList<Bullet>();
-		for (Tank tank: board.playerTanks) {
-			for (Bullet bullet: tank.getBullets()) {
+		for (Tank tank : board.playerTanks) {
+			for (Bullet bullet : tank.getBullets()) {
 				if (bullet.getX() <= 0 ||
 						bullet.getX() >= 600 ||
 						bullet.getY() <= 0 ||
@@ -177,8 +177,8 @@ public class Game extends JFrame {
 				g.setColor(Color.black);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			}
-			for (Tank tank: board.playerTanks) {
-				for (Bullet b: tank.getBullets()) {
+			for (Tank tank : board.playerTanks) {
+				for (Bullet b : tank.getBullets()) {
 					if (cell.isBulletPassing(b)) {
 						g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
 								CELL_PIXEL_SIZE, Color.BLACK, null);
@@ -224,6 +224,7 @@ public class Game extends JFrame {
 				c.execute();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+
 				Command c = new CommandShoot(board.getTank2());
 				c.execute();
 			}
