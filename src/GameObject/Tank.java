@@ -1,17 +1,25 @@
 package GameObject;
 
 import GameObject.state.State;
+import ObjectPool.BulletPool;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tank extends WObject{
 	private State state;
 	private final int playerNumber;
+	private BulletPool bulletPool;
+	private List<Bullet> bullets;
+
 	public Tank(int x, int y, int playerNumber) {
 		super(x, y);
 		state = new IdleState();
 		this.playerNumber = playerNumber;
+		bulletPool = new BulletPool();
+		bullets = new ArrayList<>();
 	}
 
 	public void turnNorth() { state = new TurnNorthState(); }
@@ -29,6 +37,15 @@ public class Tank extends WObject{
 		setY(getY() + state.getDy());
 	}
 
+	public void shoot() {
+		Bullet b = bulletPool.requestBullet(getX(), getY());
+		if (isMoveNorth()) { b.turnNorth(); }
+		else if (isMoveSouth()) { b.turnSouth(); }
+		else if (isMoveEast()) { b.turnEast(); }
+		else if (isMoveWest()) { b.turnWest(); }
+		bullets.add(b);
+	}
+
 	public boolean checkState(String stateName) {
 		return state.getClass().getName().equals("GameObject.Tank$" + stateName);
 	}
@@ -44,6 +61,10 @@ public class Tank extends WObject{
 	public boolean isIdle() { return checkState("IdleState"); }
 
 	public State getState() { return state; }
+
+	public List<Bullet> getBullets() { return bullets; }
+
+	public BulletPool getBulletPool() { return bulletPool; }
 
 	public class TurnNorthState extends State {
 		public TurnNorthState() {

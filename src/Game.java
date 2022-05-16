@@ -1,5 +1,7 @@
+import GameObject.Bullet;
 import GameObject.Cell;
-import audio.Sound;
+import GameObject.Tank;
+import ObjectPool.BulletPool;
 import audio.TankAudioController;
 import command.*;
 
@@ -7,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game extends JFrame {
 	private GridUI gridUI;
@@ -17,12 +21,13 @@ public class Game extends JFrame {
 	private int boardSize = 20;
 	private int barSize = 1;
 	private Controller controller;
-	Sound sound = new Sound();
+
 
 	public Game() {
 		controller = new Controller();
 		addKeyListener(controller);
 		board = new Board(boardSize, barSize);
+
 		tankAudioController = new TankAudioController(board.getTank1());
 		tankAudioController.initialSound();
 
@@ -59,6 +64,36 @@ public class Game extends JFrame {
 		}
 		board.moveTank1();
 		board.moveTank2();
+		moveBullets();
+		cleanupBullets();
+	}
+
+	private void moveBullets() {
+		for (Tank tank: board.playerTanks) {
+			for (Bullet bullet : tank.getBullets()) {
+				bullet.move();
+				gridUI.repaint();
+			}
+		}
+
+	}
+
+	private void cleanupBullets() {
+		List<Bullet> toRemove = new ArrayList<Bullet>();
+		for (Tank tank: board.playerTanks) {
+			for (Bullet bullet: tank.getBullets()) {
+				if (bullet.getX() <= 0 ||
+						bullet.getX() >= 600 ||
+						bullet.getY() <= 0 ||
+						bullet.getY() >= 600) {
+					toRemove.add(bullet);
+				}
+			}
+			for (Bullet bullet : toRemove) {
+				tank.getBullets().remove(bullet);
+				tank.getBulletPool().releaseBullet(bullet);
+			}
+		}
 	}
 
 	class GridUI extends JPanel {
@@ -142,6 +177,14 @@ public class Game extends JFrame {
 				g.setColor(Color.black);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			}
+			for (Tank tank: board.playerTanks) {
+				for (Bullet b: tank.getBullets()) {
+					if (cell.isBulletPassing(b)) {
+						g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+				}
+			}
 		}
 	}
 
@@ -178,6 +221,10 @@ public class Game extends JFrame {
 			}
 			if (e.getKeyCode() == KeyEvent.VK_D) {
 				Command c = new CommandTurnEast(board.getTank2());
+				c.execute();
+			}
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				Command c = new CommandShoot(board.getTank2());
 				c.execute();
 			}
 			board.setIsStart(true);

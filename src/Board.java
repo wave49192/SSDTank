@@ -1,5 +1,7 @@
 import GameObject.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Board {
@@ -8,6 +10,7 @@ public class Board {
 	private final int barSize;
 	private Tank tank1;
 	private Tank tank2;
+	public List<Tank> playerTanks;
 	private final Random random = new Random();
 
 	private boolean isOver;
@@ -16,6 +19,7 @@ public class Board {
 	public Board(int size, int barSize) {
 		this.size = size;
 		this.barSize = barSize;
+		this.playerTanks = new ArrayList<>();
 		isOver = false;
 		initCells();
 		initWall();
@@ -37,9 +41,11 @@ public class Board {
 
 	private void initTank() {
 		tank1 = new Tank(2, size-2, 1);
+		playerTanks.add(tank1);
 	}
 	private void initTank2() {
 		tank2 = new Tank(2, 1, 2);
+		playerTanks.add(tank2);
 	}
 
 	private boolean hasTank(Cell cell) {
