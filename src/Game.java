@@ -74,16 +74,27 @@ public class Game extends JFrame {
 	private void moveBullets() {
 		for(Bullet bullet : bullets) {
 			bullet.move();
+			if(board.getCell(bullet.getX(),bullet.getY()).isBrick()){
+				board.modifyCells(bullet.getX(),bullet.getY());
+
+			}
+			if(board.getCell(bullet.getX(),bullet.getY()).isSteel()){
+
+			}
+
+			if(board.getCell(bullet.getX(),bullet.getY()).isBush()){
+
+			}
 		}
 	}
 
 	private void cleanupBullets() {
 		List<Bullet> toRemove = new ArrayList<Bullet>();
 		for(Bullet bullet : bullets) {
-			if(bullet.getX() <= 0 ||
-					bullet.getX() >= 500 ||
-					bullet.getY() <= 0 ||
-					bullet.getY() >= 500) {
+			if(bullet.getX() <= 1 ||
+					bullet.getX() >= boardSize-1 ||
+					bullet.getY() <= 1 ||
+					bullet.getY() >= boardSize-1) {
 				toRemove.add(bullet);
 			}
 		}

@@ -3,6 +3,8 @@ import GameObject.*;
 import java.util.Random;
 
 public class Board {
+
+
 	private Cell[][] cells;
 	private final int size;
 	private final int barSize;
@@ -12,7 +14,9 @@ public class Board {
 
 	private boolean isOver;
 	private boolean isStart;
-
+	public void modifyCells(int x,int y) {
+		this.cells[x][y] = new Cell(x,y);
+	}
 	public Board(int size, int barSize) {
 		this.size = size;
 		this.barSize = barSize;
