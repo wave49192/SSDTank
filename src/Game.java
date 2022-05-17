@@ -87,10 +87,19 @@ public class Game extends JFrame {
 					bullet.getY() >= boardSize - 1) {
 				toRemove.add(bullet);
 			} else if (board.getCell(bullet.getX(), bullet.getY()).isBrick()) {
-
 				board.modifyCells(bullet.getX(), bullet.getY());
-				toRemove.add(bullet);
+
 			} else if (board.getCell(bullet.getX(), bullet.getY()).isSteel()) {
+				toRemove.add(bullet);
+			}
+			else if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(board.getTank1()))
+			{
+
+				toRemove.add(bullet);
+			}
+			else if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(board.getTank2()))
+			{
+
 				toRemove.add(bullet);
 			}
 
