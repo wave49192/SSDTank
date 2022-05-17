@@ -22,6 +22,6 @@ public class Cell extends WObject {
 	}
 
 	public boolean isContainTank(Tank tank) {
-		return getX() == tank.getX() && getY() == tank.getY();
+		return x == tank.getX() && y == tank.getY();
 	}
 }

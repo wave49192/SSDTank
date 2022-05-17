@@ -32,7 +32,7 @@ public class Board {
 
 	private void initCells() {
 		cells = new Cell[size + barSize][size];
-		for (int row = barSize; row < size + barSize; ++row) {
+		for (int row = barSize; row < size; ++row) {
 			for (int col = 0; col < size; ++col) {
 				cells[row][col] = new Cell(row, col);
 			}
@@ -40,10 +40,10 @@ public class Board {
 	}
 
 	private void initTank() {
-		tank1 = new Tank(2, size-2);
+		tank1 = new Tank(1, size-2);
 	}
 	private void initTank2() {
-		tank2 = new Tank(2, 1);
+		tank2 = new Tank(1, 1);
 	}
 
 	private boolean hasTank(Cell cell) {
@@ -84,11 +84,11 @@ public class Board {
 
 
 	private void initWall() {
-		for (int i = 0; i <= size - 1; i++) {
-			cells[0][i] = new Wall(1, i);//แนวตั้งซ้าย
+		for (int i = 0; i < size; i++) {
+			cells[0][i] = new Wall(0, i);//แนวตั้งซ้าย
 			cells[size-1][i] = new Wall(size, i);
-			cells[i ][0] = new Wall(i + 1, 0);
-			cells[i ][size - 1] = new Wall(i + 1, size - 1);
+			cells[i][0] = new Wall(i, 0);
+			cells[i][size - 1] = new Wall(i, size - 1);
 		}
 	}
 
