@@ -72,17 +72,17 @@ public class Game extends JFrame {
 	}
 
 	private void moveBullets() {
-		for(Bullet bullet : bullets) {
+		for (Bullet bullet : bullets) {
 			bullet.move();
-			if(board.getCell(bullet.getX(),bullet.getY()).isBrick()){
-				board.modifyCells(bullet.getX(),bullet.getY());
+			if (board.getCell(bullet.getX(), bullet.getY()).isBrick()) {
+				board.modifyCells(bullet.getX(), bullet.getY());
 
 			}
-			if(board.getCell(bullet.getX(),bullet.getY()).isSteel()){
+			if (board.getCell(bullet.getX(), bullet.getY()).isSteel()) {
 
 			}
 
-			if(board.getCell(bullet.getX(),bullet.getY()).isBush()){
+			if (board.getCell(bullet.getX(), bullet.getY()).isBush()) {
 
 			}
 		}
@@ -90,15 +90,15 @@ public class Game extends JFrame {
 
 	private void cleanupBullets() {
 		List<Bullet> toRemove = new ArrayList<Bullet>();
-		for(Bullet bullet : bullets) {
-			if(bullet.getX() <= 0 ||
-					bullet.getX() >= boardSize-1 ||
+		for (Bullet bullet : bullets) {
+			if (bullet.getX() <= 0 ||
+					bullet.getX() >= boardSize - 1 ||
 					bullet.getY() <= 0 ||
-					bullet.getY() >= boardSize-1) {
+					bullet.getY() >= boardSize - 1) {
 				toRemove.add(bullet);
 			}
 		}
-		for(Bullet bullet : toRemove) {
+		for (Bullet bullet : toRemove) {
 			bullets.remove(bullet);
 			bulletPool.releaseBullet(bullet);
 		}
@@ -246,11 +246,17 @@ public class Game extends JFrame {
 		}
 
 		public void paintBullets(Graphics g) {
-			for (Bullet b: bullets) {
+			for (Bullet b : bullets) {
 				int x = b.getX() * CELL_PIXEL_SIZE;
 				int y = b.getY() * CELL_PIXEL_SIZE;
-				g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
-						CELL_PIXEL_SIZE, Color.BLACK, null);
+
+				if (board.getCell(b.getX(), b.getY()).isBush()) {
+
+					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				}
+				else{g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
+						CELL_PIXEL_SIZE, Color.BLACK, null);}
 			}
 		}
 	}
