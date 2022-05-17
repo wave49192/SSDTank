@@ -93,7 +93,7 @@ public class Game extends JFrame {
 		for(Bullet bullet : bullets) {
 			if(bullet.getX() <= 1 ||
 					bullet.getX() >= boardSize-1 ||
-					bullet.getY() <= 1 ||
+					bullet.getY() <= 0 ||
 					bullet.getY() >= boardSize-1) {
 				toRemove.add(bullet);
 			}
@@ -148,7 +148,6 @@ public class Game extends JFrame {
 		public void paint(Graphics g) {
 			super.paint(g);
 
-			g.drawString("Tank Game", 10, 20);
 			for (int row = barSize; row < boardSize + barSize; ++row) {
 				for (int col = 0; col < boardSize; ++col) {
 					paintCell(g, row, col);
