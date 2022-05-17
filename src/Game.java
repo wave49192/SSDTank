@@ -88,7 +88,7 @@ public class Game extends JFrame {
 				toRemove.add(bullet);
 			} else if (board.getCell(bullet.getX(), bullet.getY()).isBrick()) {
 				board.modifyCells(bullet.getX(), bullet.getY());
-
+				toRemove.add(bullet);
 			} else if (board.getCell(bullet.getX(), bullet.getY()).isSteel()) {
 				toRemove.add(bullet);
 			}
@@ -266,8 +266,8 @@ public class Game extends JFrame {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				} else {
-					g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
+					g.drawImage(imageBullet, x+CELL_PIXEL_SIZE/3, y+CELL_PIXEL_SIZE/3, CELL_PIXEL_SIZE/3,
+							CELL_PIXEL_SIZE/3, Color.BLACK, null);
 				}
 			}
 		}
