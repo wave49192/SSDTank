@@ -81,10 +81,6 @@ public class Game extends JFrame {
 			if (board.getCell(bullet.getX(), bullet.getY()).isSteel()) {
 
 			}
-
-			if (board.getCell(bullet.getX(), bullet.getY()).isBush()) {
-
-			}
 		}
 	}
 
@@ -94,14 +90,21 @@ public class Game extends JFrame {
 			if (bullet.getX() <= 0 ||
 					bullet.getX() >= boardSize - 1 ||
 					bullet.getY() <= 0 ||
-					bullet.getY() >= boardSize - 1) {
+					bullet.getY() >= boardSize - 1 || board.getCell(bullet.getX(), bullet.getY()).isBrick() || board.getCell(bullet.getX(), bullet.getY()).isSteel()) {
 				toRemove.add(bullet);
 			}
+
+
+
 		}
-		for (Bullet bullet : toRemove) {
-			bullets.remove(bullet);
-			bulletPool.releaseBullet(bullet);
+		if (!toRemove.isEmpty()) {
+
+			for (Bullet bullet2 : toRemove) {
+				bullets.remove(bullet2);
+				bulletPool.releaseBullet(bullet2);
+			}
 		}
+
 	}
 
 	class GridUI extends JPanel {
@@ -254,9 +257,10 @@ public class Game extends JFrame {
 
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+				} else {
+					g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
 				}
-				else{g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
-						CELL_PIXEL_SIZE, Color.BLACK, null);}
 			}
 		}
 	}
