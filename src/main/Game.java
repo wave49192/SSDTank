@@ -9,6 +9,8 @@ import command.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ public class Game extends JFrame {
 		Controller controller = new Controller();
 		addKeyListener(controller);
 		board = new Board(boardSize, barSize, isMultiplayer);
-		board.setIsStart(true);
 		bulletPool = new BulletPool();
 		bullets = new ArrayList<>();
 		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
@@ -134,7 +135,30 @@ public class Game extends JFrame {
 			multiPlayerButton = new JButton("Multiplayer Mode");
 			singlePlayerButton = new JButton("Single Player Mode");
 			add(singlePlayerButton);
+			singlePlayerButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					singlePlayerButton.setEnabled(false);
+					multiPlayerButton.setEnabled(true);
+					Game.this.dispose();
+					Game game = new Game();
+					game.start();
+
+				}
+			});
 			add(multiPlayerButton);
+			multiPlayerButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					singlePlayerButton.setEnabled(true);
+					multiPlayerButton.setEnabled(false);
+
+					Game.this.dispose();
+					Game game = new Game();
+					game.start();
+
+				}
+			});
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
 					(boardSize) * CELL_PIXEL_SIZE));
 			imageTree = new ImageIcon("images/tree.jpg").getImage();
@@ -292,8 +316,8 @@ public class Game extends JFrame {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				} else {
-					g.drawImage(imageBullet, x+CELL_PIXEL_SIZE/3, y+CELL_PIXEL_SIZE/3, CELL_PIXEL_SIZE/3,
-							CELL_PIXEL_SIZE/3, Color.BLACK, null);
+					g.drawImage(imageBullet, x + CELL_PIXEL_SIZE / 3, y + CELL_PIXEL_SIZE / 3, CELL_PIXEL_SIZE / 3,
+							CELL_PIXEL_SIZE / 3, Color.BLACK, null);
 				}
 			}
 		}
