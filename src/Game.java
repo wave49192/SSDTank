@@ -91,7 +91,7 @@ public class Game extends JFrame {
 	private void cleanupBullets() {
 		List<Bullet> toRemove = new ArrayList<Bullet>();
 		for(Bullet bullet : bullets) {
-			if(bullet.getX() <= 1 ||
+			if(bullet.getX() <= 0 ||
 					bullet.getX() >= boardSize-1 ||
 					bullet.getY() <= 0 ||
 					bullet.getY() >= boardSize-1) {
