@@ -9,23 +9,23 @@ public class Bullet extends WObject {
 	private int dy;
 
 	public void turnNorth() {
-		dx = -1;
-		dy = 0;
-	}
-
-	public void turnSouth() {
-		dx = 1;
-		dy = 0;
-	}
-
-	public void turnWest() {
 		dx = 0;
 		dy = -1;
 	}
 
-	public void turnEast() {
+	public void turnSouth() {
 		dx = 0;
 		dy = 1;
+	}
+
+	public void turnWest() {
+		dx = -1;
+		dy = 0;
+	}
+
+	public void turnEast() {
+		dx = 1;
+		dy = 0;
 	}
 
 	public void move() {
