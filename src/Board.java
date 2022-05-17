@@ -16,9 +16,11 @@ public class Board {
 
 	private boolean isOver;
 	private boolean isStart;
-	public void modifyCells(int x,int y) {
-		this.cells[x][y] = new Cell(x,y);
+
+	public void modifyCells(int x, int y) {
+		this.cells[x][y] = new Cell(x, y);
 	}
+
 	public Board(int size, int barSize) {
 		this.size = size;
 		this.barSize = barSize;
@@ -43,8 +45,9 @@ public class Board {
 	}
 
 	private void initTank() {
-		tank1 = new Tank(1, size-2);
+		tank1 = new Tank(1, size - 2);
 	}
+
 	private void initTank2() {
 		tank2 = new Tank(1, 1);
 	}
@@ -74,6 +77,7 @@ public class Board {
 			}
 		}
 	}
+
 	private void initTree() {
 		for (int i = 0; i <= size * 3; i += 1) {
 			int row = random.nextInt(size) + barSize;
@@ -89,7 +93,7 @@ public class Board {
 	private void initWall() {
 		for (int i = 0; i < size; i++) {
 			cells[0][i] = new Wall(0, i);//แนวตั้งซ้าย
-			cells[size-1][i] = new Wall(size, i);
+			cells[size - 1][i] = new Wall(size, i);
 			cells[i][0] = new Wall(i, 0);
 			cells[i][size - 1] = new Wall(i, size - 1);
 		}
@@ -128,7 +132,9 @@ public class Board {
 		return cells[row][col];
 	}
 
-	public List<Tank> getPlayerTanks() { return playerTanks; }
+	public List<Tank> getPlayerTanks() {
+		return playerTanks;
+	}
 
 	public boolean getIsOver() {
 		return isOver;
