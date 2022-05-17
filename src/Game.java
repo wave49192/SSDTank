@@ -1,3 +1,5 @@
+import GameObject.Bullet;
+import GameObject.BulletPool;
 import GameObject.Cell;
 import audio.Sound;
 import audio.TankAudioController;
@@ -7,11 +9,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game extends JFrame {
 	private GridUI gridUI;
 	private TankAudioController tankAudioController;
 	private Thread thread;
+	private BulletPool bulletPool;
+	private List<Bullet> bullets;
 
 	private Board board;
 	private int boardSize = 20;
@@ -23,6 +29,8 @@ public class Game extends JFrame {
 		controller = new Controller();
 		addKeyListener(controller);
 		board = new Board(boardSize, barSize);
+		bulletPool = new BulletPool();
+		bullets = new ArrayList<>();
 		tankAudioController = new TankAudioController(board.getTank1());
 		tankAudioController.initialSound();
 
@@ -59,6 +67,30 @@ public class Game extends JFrame {
 		}
 		board.moveTank1();
 		board.moveTank2();
+		moveBullets();
+		cleanupBullets();
+	}
+
+	private void moveBullets() {
+		for(Bullet bullet : bullets) {
+			bullet.move();
+		}
+	}
+
+	private void cleanupBullets() {
+		List<Bullet> toRemove = new ArrayList<Bullet>();
+		for(Bullet bullet : bullets) {
+			if(bullet.getX() <= 0 ||
+					bullet.getX() >= 500 ||
+					bullet.getY() <= 0 ||
+					bullet.getY() >= 500) {
+				toRemove.add(bullet);
+			}
+		}
+		for(Bullet bullet : toRemove) {
+			bullets.remove(bullet);
+			bulletPool.releaseBullet(bullet);
+		}
 	}
 
 	class GridUI extends JPanel {
@@ -86,7 +118,7 @@ public class Game extends JFrame {
 					(boardSize + barSize) * CELL_PIXEL_SIZE));
 			imageBrick = new ImageIcon("images/break_brick.jpg").getImage();
 			imageSteel = new ImageIcon("images/solid_brick.jpg").getImage();
-			imageBullet = new ImageIcon("images/Bullet.png").getImage();
+			imageBullet = new ImageIcon("images/enemy_bullet.png").getImage();
 			imageTankNorth1 = new ImageIcon("images/TankNorth1.png").getImage();
 			imageTankWest1 = new ImageIcon("images/TankWest1.png").getImage();
 			imageTankSouth1 = new ImageIcon("images/TankSouth1.png").getImage();
@@ -105,12 +137,13 @@ public class Game extends JFrame {
 		public void paint(Graphics g) {
 			super.paint(g);
 
-			g.drawString("WObject.Tank Game", 10, 20);
+			g.drawString("Tank Game", 10, 20);
 			for (int row = barSize; row < boardSize + barSize; ++row) {
 				for (int col = 0; col < boardSize; ++col) {
 					paintCell(g, row, col);
 				}
 			}
+			paintBullets(g);
 		}
 
 		private void paintCell(Graphics g, int row, int col) {
@@ -200,6 +233,15 @@ public class Game extends JFrame {
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			}
 		}
+
+		public void paintBullets(Graphics g) {
+			for (Bullet b: bullets) {
+				int x = b.getX() * CELL_PIXEL_SIZE;
+				int y = b.getY() * CELL_PIXEL_SIZE;
+				g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
+						CELL_PIXEL_SIZE, Color.BLACK, null);
+			}
+		}
 	}
 
 	class Controller extends KeyAdapter {
@@ -235,6 +277,10 @@ public class Game extends JFrame {
 			}
 			if (e.getKeyCode() == KeyEvent.VK_D) {
 				Command c = new CommandTurnEast(board.getTank2());
+				c.execute();
+			}
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				Command c = new CommandShoot(board.getTank2(), bulletPool, bullets);
 				c.execute();
 			}
 			board.setIsStart(true);

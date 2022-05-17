@@ -94,7 +94,7 @@ public class Board {
 	}
 
 	public void moveTank1() {
-		if (canMoveTank(tank1, tank2)) {
+		if (canMoveTank(tank1, tank2) && !tank1.isIdle()) {
 			tank1.move();
 		}
 	}

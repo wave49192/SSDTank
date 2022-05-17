@@ -1,8 +1,7 @@
 package GameObject;
 
 public class Bullet extends WObject {
-	private Tank tank;
-	public Bullet(int x, int y,int dx, int dy) {
+	public Bullet(int x, int y) {
 		super(x, y);
 	}
 
@@ -39,46 +38,9 @@ public class Bullet extends WObject {
 		dy = 0;
 	}
 
-	public int getDx() {
-		return dx;
-	}
-
-	public int getDy() {
-		return dy;
-	}
-
-	public boolean isMoveNorth() {
-		return dx == -1 && dy == 0;
-	}
-
-	public boolean isMoveSouth() {
-		return dx == 1 && dy == 0;
-	}
-
-	public boolean isMoveWest() {
-		return dx == 0 && dy == -1;
-	}
-
-	public boolean isMoveEast() {
-		return dx == 0 && dy == 1;
-	}
-
-	public boolean isIdle() {
-		return dx == 0 && dy == 0;
-	}
-
-	public Bullet(int x, int y, int dx, int dy, Tank tank) {
-		super(x, y);
-		setSpeed(6);
-		setHitBoxSize(10);
-		setDx(dx);
-		setDy(dy);
-		this.tank = tank;
-	}
-
-	public void refreshState(int x, int y, int dx, int dy, Tank tank) {
-		setX(x);
-		setY(y);
+	public void refreshState(Tank tank) {
+		setX(tank.getX());
+		setY(tank.getY());
 		if (tank.isMoveSouth()) {
 			turnSouth();
 		}
@@ -91,11 +53,13 @@ public class Bullet extends WObject {
 		if (tank.isMoveWest()) {
 			turnWest();
 		}
-
-		this.tank = tank;
 	}
 
-	public Tank getTank() {
-		return tank;
+	public int getDx() {
+		return dx;
+	}
+
+	public int getDy() {
+		return dy;
 	}
 }

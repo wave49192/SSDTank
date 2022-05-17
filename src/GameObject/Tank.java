@@ -1,10 +1,14 @@
 package GameObject;
 
+import java.util.List;
+
 public class Tank extends WObject{
+	private boolean moving;
+
 	public Tank(int x, int y) {
 		super(x, y);
+		moving = true;
 	}
-
 	private int dx;
 	private int dy;
 
@@ -29,18 +33,27 @@ public class Tank extends WObject{
 	}
 
 	public void move() {
+		moving = true;
 		setX(getX() + dx);
 		setY(getY() + dy);
 	}
 
 	public void stop() {
-		dx = 0;
-		dy = 0;
+		moving = false;
+	}
+
+	public void shoot(BulletPool bulletPool, List<Bullet> bullets) {
+		Bullet bullet = bulletPool.requestBullet(this);
+		bullets.add(bullet);
 	}
 
 	public int getDx() { return dx; }
 
 	public int getDy() { return dy; }
+
+	public void setMoving(boolean moving) {
+		this.moving = moving;
+	}
 
 	public boolean isMoveNorth() { return dx == -1 && dy == 0; }
 
@@ -50,18 +63,5 @@ public class Tank extends WObject{
 
 	public boolean isMoveEast() { return dx == 0 && dy == 1; }
 
-	public boolean isIdle() { return dx == 0 && dy == 0; }
-
-	public Bullet requestBullet(int x, int y, int dx, int dy) {
-		try {
-			Bullet bullet = bullets.remove(0);
-			bullet.refreshState(x, y, dx, dy);
-			return bullet;
-		} catch (IndexOutOfBoundsException e) {
-			size += 1;
-			System.out.println("Current Max Bullet = " + size);
-			Bullet bullet = new Bullet(-999, -999, 0, 0);
-			bullets.add(bullet);
-			return bullet;
-		}
-	}
+	public boolean isIdle() { return !moving; }
+}
