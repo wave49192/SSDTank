@@ -99,9 +99,8 @@ public class Game extends JFrame {
 			} else if (cell.isSteel()) {
 				toRemove.add(bullet);
 			}
-			for (Tank t: board.getPlayerTanks()) {
-				 if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t))
-				{
+			for (Tank t : board.getPlayerTanks()) {
+				if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t)) {
 					t.setHp(t.getHp() - 1);
 					toRemove.add(bullet);
 				}
@@ -159,7 +158,7 @@ public class Game extends JFrame {
 
 			g.drawString("Tank Game", 10, 20);
 			for (int row = barSize; row < boardSize; ++row) {
-				for (int col = 0; col < boardSize; ++col) {
+				for (int col = 1; col < boardSize; ++col) {
 					paintCell(g, row, col);
 				}
 			}
@@ -172,10 +171,7 @@ public class Game extends JFrame {
 
 			Cell cell = board.getCell(row, col);
 			List<Tank> playerTanks = board.getPlayerTanks();
-			if (cell.isWall()) {
-				g.setColor(Color.darkGray);
-				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
-			} else if (cell.isBrick()) {
+			if (cell.isBrick()) {
 				g.drawImage(imageBrick, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 			} else if (cell.isSteel()) {
@@ -239,8 +235,8 @@ public class Game extends JFrame {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				} else {
-					g.drawImage(imageBullet, x+CELL_PIXEL_SIZE/3, y+CELL_PIXEL_SIZE/3, CELL_PIXEL_SIZE/3,
-							CELL_PIXEL_SIZE/3, Color.BLACK, null);
+					g.drawImage(imageBullet, x + CELL_PIXEL_SIZE / 3, y + CELL_PIXEL_SIZE / 3, CELL_PIXEL_SIZE / 3,
+							CELL_PIXEL_SIZE / 3, Color.BLACK, null);
 				}
 			}
 		}
