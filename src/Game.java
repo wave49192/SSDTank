@@ -43,6 +43,7 @@ public class Game extends JFrame {
 				while (!board.getIsOver()) {
 					gridUI.repaint();
 					moving();
+					setDeadTanks();
 					tankAudioController.playTankMovementSound();
 					try {
 						Thread.sleep(100);
@@ -61,6 +62,14 @@ public class Game extends JFrame {
 
 	public void start() {
 		setVisible(true);
+	}
+
+	public void setDeadTanks() {
+		for (Tank t: board.getPlayerTanks()) {
+			if (t.getHp() <= 0) {
+				t.setDead(true);
+			}
+		}
 	}
 
 	public void moving() {
@@ -90,6 +99,13 @@ public class Game extends JFrame {
 			} else if (cell.isSteel()) {
 				toRemove.add(bullet);
 			}
+			for (Tank t: board.getPlayerTanks()) {
+				 if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t))
+				{
+					t.setHp(t.getHp() - 1);
+					toRemove.add(bullet);
+				}
+			}
 		}
 		if (!toRemove.isEmpty()) {
 
@@ -107,6 +123,7 @@ public class Game extends JFrame {
 		private final Image imageSteel;
 		private final Image imageTree;
 		private final Image imageBullet;
+		private final Image imageDead;
 		private List<List<Image>> playerImages = new ArrayList<>();
 
 		private Image lastTank1Move;
@@ -120,6 +137,7 @@ public class Game extends JFrame {
 			imageBrick = new ImageIcon("images/break_brick.jpg").getImage();
 			imageSteel = new ImageIcon("images/solid_brick.jpg").getImage();
 			imageBullet = new ImageIcon("images/enemy_bullet.png").getImage();
+			imageDead = new ImageIcon("images/dead.png").getImage();
 
 			playerImages.add(new ArrayList<Image>(Arrays.asList(
 					new ImageIcon("images/TankNorth1.png").getImage(),
@@ -173,7 +191,13 @@ public class Game extends JFrame {
 			}
 			for (int i = 0; i < board.getPlayerTanks().size(); ++i) {
 				Tank t = playerTanks.get(i);
-				System.out.println(t);
+				if (t.isDead()) {
+					int deadX = t.getX() * CELL_PIXEL_SIZE;
+					int deadY = t.getY() * CELL_PIXEL_SIZE;
+					g.drawImage(imageDead, deadX, deadY, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+					continue;
+				}
 				if (cell.isBush() && cell.isContainTank(t)) {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
@@ -215,8 +239,8 @@ public class Game extends JFrame {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				} else {
-					g.drawImage(imageBullet, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
+					g.drawImage(imageBullet, x+CELL_PIXEL_SIZE/3, y+CELL_PIXEL_SIZE/3, CELL_PIXEL_SIZE/3,
+							CELL_PIXEL_SIZE/3, Color.BLACK, null);
 				}
 			}
 		}

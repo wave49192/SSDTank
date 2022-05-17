@@ -6,13 +6,15 @@ public class Tank extends WObject{
 	private boolean moving;
 	private int hp;
 	private int playerNumber;
+	private boolean dead;
 
 	public Tank(int x, int y) {
 		super(x, y);
 		hp = 5;
 		moving = true;
+		dead = false;
 	}
-	
+
 	private int dx;
 	private int dy;
 
@@ -37,9 +39,12 @@ public class Tank extends WObject{
 	}
 
 	public void move() {
-		moving = true;
-		x += dx;
-		y += dy;
+		if (!dead) {
+			moving = true;
+			x += dx;
+			y += dy;
+		}
+
 	}
 
 	public void stop() {
@@ -47,8 +52,10 @@ public class Tank extends WObject{
 	}
 
 	public void shoot(BulletPool bulletPool, List<Bullet> bullets) {
-		Bullet bullet = bulletPool.requestBullet(this);
-		bullets.add(bullet);
+		if (!dead) {
+			Bullet bullet = bulletPool.requestBullet(this);
+			bullets.add(bullet);
+		}
 	}
 
 	public int getDx() { return dx; }
@@ -69,6 +76,14 @@ public class Tank extends WObject{
 
 	public void setMoving(boolean moving) {
 		this.moving = moving;
+	}
+
+	public boolean isDead() {
+		return dead;
+	}
+
+	public void setDead(boolean dead) {
+		this.dead = dead;
 	}
 
 	public boolean isMoveNorth() { return dx == 0 && dy == -1; }
