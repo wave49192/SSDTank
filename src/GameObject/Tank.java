@@ -4,11 +4,15 @@ import java.util.List;
 
 public class Tank extends WObject{
 	private boolean moving;
+	private int hp;
+	private int playerNumber;
 
 	public Tank(int x, int y) {
 		super(x, y);
+		hp = 5;
 		moving = true;
 	}
+	
 	private int dx;
 	private int dy;
 
@@ -50,6 +54,18 @@ public class Tank extends WObject{
 	public int getDx() { return dx; }
 
 	public int getDy() { return dy; }
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public int getPlayerNumber() {
+		return playerNumber;
+	}
 
 	public void setMoving(boolean moving) {
 		this.moving = moving;

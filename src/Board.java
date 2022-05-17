@@ -1,15 +1,17 @@
 import GameObject.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Board {
-
-
 	private Cell[][] cells;
 	private final int size;
 	private final int barSize;
 	private Tank tank1;
 	private Tank tank2;
+	private List<Tank> playerTanks;
 	private final Random random = new Random();
 
 	private boolean isOver;
@@ -28,6 +30,7 @@ public class Board {
 		initTree();
 		initTank();
 		initTank2();
+		playerTanks = new ArrayList<Tank>(Arrays.asList(tank1, tank2));
 	}
 
 	private void initCells() {
@@ -97,15 +100,12 @@ public class Board {
 		return !(nextCell.isContainTank(otherTank) || nextCell.isBrick() || nextCell.isWall() || nextCell.isSteel());
 	}
 
-	public void moveTank1() {
-		if (canMoveTank(tank1, tank2) && !tank1.isIdle()) {
-			tank1.move();
-		}
-	}
-
-	public void moveTank2() {
-		if (canMoveTank(tank2, tank1) && !tank2.isIdle()) {
-			tank2.move();
+	public void moveTank() {
+		for (Tank t1: playerTanks) {
+			for (Tank t2: playerTanks) {
+				if (t1 != t2 && canMoveTank(t1, t2) && !t1.isIdle())
+					t1.move();
+			}
 		}
 	}
 
@@ -116,12 +116,7 @@ public class Board {
 		return cells[row][col];
 	}
 
-	public Tank getTank1() {
-		return tank1;
-	}
-	public Tank getTank2() {
-		return tank2;
-	}
+	public List<Tank> getPlayerTanks() { return playerTanks; }
 
 	public boolean getIsOver() {
 		return isOver;

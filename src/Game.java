@@ -1,6 +1,7 @@
 import GameObject.Bullet;
 import GameObject.BulletPool;
 import GameObject.Cell;
+import GameObject.Tank;
 import audio.Sound;
 import audio.TankAudioController;
 import command.*;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Game extends JFrame {
@@ -31,7 +33,7 @@ public class Game extends JFrame {
 		board = new Board(boardSize, barSize);
 		bulletPool = new BulletPool();
 		bullets = new ArrayList<>();
-		tankAudioController = new TankAudioController(board.getTank1());
+		tankAudioController = new TankAudioController(board.getPlayerTanks().get(1));
 		tankAudioController.initialSound();
 
 		gridUI = new GridUI();
@@ -65,8 +67,7 @@ public class Game extends JFrame {
 		if (!board.getIsStart()) {
 			return;
 		}
-		board.moveTank1();
-		board.moveTank2();
+		board.moveTank();
 		moveBullets();
 		cleanupBullets();
 	}
@@ -74,27 +75,21 @@ public class Game extends JFrame {
 	private void moveBullets() {
 		for (Bullet bullet : bullets) {
 			bullet.move();
-
 		}
 	}
 
 	private void cleanupBullets() {
 		List<Bullet> toRemove = new ArrayList<Bullet>();
 		for (Bullet bullet : bullets) {
-			if (bullet.getX() <= 0 ||
-					bullet.getX() >= boardSize - 1 ||
-					bullet.getY() <= 0 ||
-					bullet.getY() >= boardSize - 1) {
+			Cell cell = board.getCell(bullet.getX(), bullet.getY());
+			if (cell.isWall()) {
 				toRemove.add(bullet);
-			} else if (board.getCell(bullet.getX(), bullet.getY()).isBrick()) {
-
+			} else if (cell.isBrick()) {
 				board.modifyCells(bullet.getX(), bullet.getY());
 				toRemove.add(bullet);
-			} else if (board.getCell(bullet.getX(), bullet.getY()).isSteel()) {
+			} else if (cell.isSteel()) {
 				toRemove.add(bullet);
 			}
-
-
 		}
 		if (!toRemove.isEmpty()) {
 
@@ -112,15 +107,7 @@ public class Game extends JFrame {
 		private final Image imageSteel;
 		private final Image imageTree;
 		private final Image imageBullet;
-		private final Image imageTankNorth1;
-		private final Image imageTankEast1;
-		private final Image imageTankSouth1;
-		private final Image imageTankWest1;
-
-		private final Image imageTankNorth2;
-		private final Image imageTankEast2;
-		private final Image imageTankSouth2;
-		private final Image imageTankWest2;
+		private List<List<Image>> playerImages = new ArrayList<>();
 
 		private Image lastTank1Move;
 		private Image lastTank2Move;
@@ -129,21 +116,23 @@ public class Game extends JFrame {
 		public GridUI() {
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
 					(boardSize) * CELL_PIXEL_SIZE));
+			imageTree = new ImageIcon("images/tree.jpg").getImage();
 			imageBrick = new ImageIcon("images/break_brick.jpg").getImage();
 			imageSteel = new ImageIcon("images/solid_brick.jpg").getImage();
 			imageBullet = new ImageIcon("images/enemy_bullet.png").getImage();
-			imageTankNorth1 = new ImageIcon("images/TankNorth1.png").getImage();
-			imageTankWest1 = new ImageIcon("images/TankWest1.png").getImage();
-			imageTankSouth1 = new ImageIcon("images/TankSouth1.png").getImage();
-			imageTankEast1 = new ImageIcon("images/TankEast1.png").getImage();
 
-			imageTankNorth2 = new ImageIcon("images/TankNorth2.png").getImage();
-			imageTankWest2 = new ImageIcon("images/TankWest2.png").getImage();
-			imageTankSouth2 = new ImageIcon("images/TankSouth2.png").getImage();
-			imageTankEast2 = new ImageIcon("images/TankEast2.png").getImage();
-			imageTree = new ImageIcon("images/tree.jpg").getImage();
-			lastTank1Move = imageTankNorth1;
-			lastTank2Move = imageTankNorth2;
+			playerImages.add(new ArrayList<Image>(Arrays.asList(
+					new ImageIcon("images/TankNorth1.png").getImage(),
+					new ImageIcon("images/TankSouth1.png").getImage(),
+					new ImageIcon("images/TankWest1.png").getImage(),
+					new ImageIcon("images/TankEast1.png").getImage()
+			)));
+			playerImages.add(new ArrayList<Image>(Arrays.asList(
+					new ImageIcon("images/TankNorth2.png").getImage(),
+					new ImageIcon("images/TankSouth2.png").getImage(),
+					new ImageIcon("images/TankWest2.png").getImage(),
+					new ImageIcon("images/TankEast2.png").getImage()
+			)));
 		}
 
 		@Override
@@ -164,71 +153,8 @@ public class Game extends JFrame {
 			int y = col * CELL_PIXEL_SIZE;
 
 			Cell cell = board.getCell(row, col);
-			if (cell.isBush() && cell.isContainTank(board.getTank1())) {
-				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
-						CELL_PIXEL_SIZE, Color.BLACK, null);
-			} else if (cell.isBush() && cell.isContainTank(board.getTank2())) {
-				g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
-						CELL_PIXEL_SIZE, Color.BLACK, null);
-			} else if (cell.isContainTank(board.getTank1())) {
-				if (!board.getIsStart()) {
-					g.drawImage(imageTankNorth1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-				}
-				if (board.getTank1().isMoveNorth()) {
-					g.drawImage(imageTankNorth1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankNorth1;
-				}
-				if (board.getTank1().isMoveSouth()) {
-					g.drawImage(imageTankSouth1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankSouth1;
-				}
-				if (board.getTank1().isMoveWest()) {
-					g.drawImage(imageTankWest1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankWest1;
-				}
-				if (board.getTank1().isMoveEast()) {
-					g.drawImage(imageTankEast1, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank1Move = imageTankEast1;
-				}
-				if (board.getTank1().isIdle()) {
-					g.drawImage(lastTank1Move, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-				}
-			} else if (cell.isContainTank(board.getTank2())) {
-				if (!board.getIsStart()) {
-					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-				}
-				if (board.getTank2().isMoveNorth()) {
-					g.drawImage(imageTankNorth2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankNorth2;
-				}
-				if (board.getTank2().isMoveSouth()) {
-					g.drawImage(imageTankSouth2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankSouth2;
-				}
-				if (board.getTank2().isMoveWest()) {
-					g.drawImage(imageTankWest2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankWest2;
-				}
-				if (board.getTank2().isMoveEast()) {
-					g.drawImage(imageTankEast2, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					lastTank2Move = imageTankEast2;
-				}
-				if (board.getTank2().isIdle()) {
-					g.drawImage(lastTank2Move, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-				}
-			} else if (cell.isWall()) {
+			List<Tank> playerTanks = board.getPlayerTanks();
+			if (cell.isWall()) {
 				g.setColor(Color.darkGray);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			} else if (cell.isBrick()) {
@@ -244,6 +170,38 @@ public class Game extends JFrame {
 			} else {
 				g.setColor(Color.black);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
+			}
+			for (int i = 0; i < board.getPlayerTanks().size(); ++i) {
+				Tank t = playerTanks.get(i);
+				System.out.println(t);
+				if (cell.isBush() && cell.isContainTank(t)) {
+					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				} else if (cell.isBush() && cell.isContainTank(t)) {
+					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				} else if (cell.isContainTank(t)) {
+					if (!board.getIsStart()) {
+						g.drawImage(playerImages.get(i).get(0), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveNorth()) {
+						g.drawImage(playerImages.get(i).get(0), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveSouth()) {
+						g.drawImage(playerImages.get(i).get(1), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveWest()) {
+						g.drawImage(playerImages.get(i).get(2), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveEast()) {
+						g.drawImage(playerImages.get(i).get(3), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+				}
 			}
 		}
 
@@ -268,40 +226,46 @@ public class Game extends JFrame {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
-				Command c = new CommandTurnNorth(board.getTank1());
+				Command c = new CommandTurnNorth(board.getPlayerTanks().get(0));
 				c.execute();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				Command c = new CommandTurnSouth(board.getTank1());
+				Command c = new CommandTurnSouth(board.getPlayerTanks().get(0));
 				c.execute();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				Command c = new CommandTurnWest(board.getTank1());
+				Command c = new CommandTurnWest(board.getPlayerTanks().get(0));
 				c.execute();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				Command c = new CommandTurnEast(board.getTank1());
+				Command c = new CommandTurnEast(board.getPlayerTanks().get(0));
 				c.execute();
 			}
-			if (e.getKeyCode() == KeyEvent.VK_W) {
-				Command c = new CommandTurnNorth(board.getTank2());
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				Command c = new CommandShoot(board.getPlayerTanks().get(0), bulletPool, bullets);
 				c.execute();
 			}
-			if (e.getKeyCode() == KeyEvent.VK_S) {
-				Command c = new CommandTurnSouth(board.getTank2());
-				c.execute();
-			}
-			if (e.getKeyCode() == KeyEvent.VK_A) {
-				Command c = new CommandTurnWest(board.getTank2());
-				c.execute();
-			}
-			if (e.getKeyCode() == KeyEvent.VK_D) {
-				Command c = new CommandTurnEast(board.getTank2());
-				c.execute();
-			}
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				Command c = new CommandShoot(board.getTank2(), bulletPool, bullets);
-				c.execute();
+			if (board.getPlayerTanks().size() == 2) {
+				if (e.getKeyCode() == KeyEvent.VK_W) {
+					Command c = new CommandTurnNorth(board.getPlayerTanks().get(1));
+					c.execute();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_S) {
+					Command c = new CommandTurnSouth(board.getPlayerTanks().get(1));
+					c.execute();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_A) {
+					Command c = new CommandTurnWest(board.getPlayerTanks().get(1));
+					c.execute();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_D) {
+					Command c = new CommandTurnEast(board.getPlayerTanks().get(1));
+					c.execute();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+					Command c = new CommandShoot(board.getPlayerTanks().get(1), bulletPool, bullets);
+					c.execute();
+				}
 			}
 			board.setIsStart(true);
 		}
@@ -313,14 +277,14 @@ public class Game extends JFrame {
 					e.getKeyCode() == KeyEvent.VK_DOWN ||
 					e.getKeyCode() == KeyEvent.VK_LEFT ||
 					e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				Command c = new CommandStop(board.getTank1());
+				Command c = new CommandStop(board.getPlayerTanks().get(0));
 				c.execute();
 			}
 			if (e.getKeyCode() == KeyEvent.VK_W ||
 					e.getKeyCode() == KeyEvent.VK_S ||
 					e.getKeyCode() == KeyEvent.VK_A ||
 					e.getKeyCode() == KeyEvent.VK_D) {
-				Command c = new CommandStop(board.getTank2());
+				Command c = new CommandStop(board.getPlayerTanks().get(1));
 				c.execute();
 			}
 		}
