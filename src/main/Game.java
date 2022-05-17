@@ -120,6 +120,7 @@ public class Game extends JFrame {
 	}
 
 	class GridUI extends JPanel {
+		private JButton startButton;
 		private JButton singlePlayerButton;
 		private JButton multiPlayerButton;
 		public static final int CELL_PIXEL_SIZE = 30;
@@ -132,6 +133,15 @@ public class Game extends JFrame {
 		private List<Image> enemyImages;
 
 		public GridUI() {
+			startButton = new JButton("Start");
+			add(startButton);
+			startButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					startButton.setEnabled(false);
+					Game.this.requestFocus();
+				}
+			});
 			multiPlayerButton = new JButton("Multiplayer Mode");
 			singlePlayerButton = new JButton("Single Player Mode");
 			add(singlePlayerButton);
@@ -142,6 +152,7 @@ public class Game extends JFrame {
 					multiPlayerButton.setEnabled(true);
 					Game.this.dispose();
 					Game game = new Game();
+					game.isMultiplayer = false;
 					game.start();
 
 				}
@@ -155,6 +166,7 @@ public class Game extends JFrame {
 
 					Game.this.dispose();
 					Game game = new Game();
+					game.isMultiplayer = true;
 					game.start();
 
 				}
