@@ -143,7 +143,9 @@ public class Game extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					singlePlayerButton.setEnabled(false);
 					multiPlayerButton.setEnabled(true);
-					Game.this.requestFocus();
+					Game.this.dispose();
+					Game game = new Game();
+					game.start();
 
 				}
 			});
@@ -154,7 +156,9 @@ public class Game extends JFrame {
 					singlePlayerButton.setEnabled(true);
 					multiPlayerButton.setEnabled(false);
 
-					Game.this.requestFocus();
+					Game.this.dispose();
+					Game game = new Game();
+					game.start();
 
 				}
 			});
