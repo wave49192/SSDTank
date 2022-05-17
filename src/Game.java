@@ -33,7 +33,7 @@ public class Game extends JFrame {
 		board = new Board(boardSize, barSize);
 		bulletPool = new BulletPool();
 		bullets = new ArrayList<>();
-		tankAudioController = new TankAudioController(board.getPlayerTanks().get(1));
+		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
 		tankAudioController.initialSound();
 
 		gridUI = new GridUI();
@@ -304,12 +304,14 @@ public class Game extends JFrame {
 				Command c = new CommandStop(board.getPlayerTanks().get(0));
 				c.execute();
 			}
-			if (e.getKeyCode() == KeyEvent.VK_W ||
-					e.getKeyCode() == KeyEvent.VK_S ||
-					e.getKeyCode() == KeyEvent.VK_A ||
-					e.getKeyCode() == KeyEvent.VK_D) {
-				Command c = new CommandStop(board.getPlayerTanks().get(1));
-				c.execute();
+			if (board.getPlayerTanks().size() == 2) {
+				if (e.getKeyCode() == KeyEvent.VK_W ||
+						e.getKeyCode() == KeyEvent.VK_S ||
+						e.getKeyCode() == KeyEvent.VK_A ||
+						e.getKeyCode() == KeyEvent.VK_D) {
+					Command c = new CommandStop(board.getPlayerTanks().get(1));
+					c.execute();
+				}
 			}
 		}
 	}

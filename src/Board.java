@@ -30,7 +30,7 @@ public class Board {
 		initTree();
 		initTank();
 		initTank2();
-		playerTanks = new ArrayList<Tank>(Arrays.asList(tank1, tank2));
+		playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
 	}
 
 	private void initCells() {
@@ -95,16 +95,28 @@ public class Board {
 		}
 	}
 
-	public boolean canMoveTank(Tank tank, Tank otherTank) {
+	public boolean canMoveTank(Tank tank) {
 		Cell nextCell = getCell(tank.getX() + tank.getDx(), tank.getY() + tank.getDy());
-		return !(nextCell.isContainTank(otherTank) || nextCell.isBrick() || nextCell.isWall() || nextCell.isSteel());
+		return !(nextCell.isBrick() || nextCell.isWall() || nextCell.isSteel());
+	}
+
+	public boolean collideTank(Tank tank, Tank otherTank) {
+		Cell nextCell = getCell(tank.getX() + tank.getDx(), tank.getY() + tank.getDy());
+		return nextCell.isContainTank(otherTank);
 	}
 
 	public void moveTank() {
 		for (Tank t1: playerTanks) {
-			for (Tank t2: playerTanks) {
-				if (t1 != t2 && canMoveTank(t1, t2) && !t1.isIdle())
+			if (playerTanks.size() == 2) {
+				for (Tank t2 : playerTanks) {
+					if (t1 != t2 && canMoveTank(t1) && !collideTank(t1, t2) && !t1.isIdle()) {
+						t1.move();
+					}
+				}
+			} else {
+				if (canMoveTank(t1) && !t1.isIdle()) {
 					t1.move();
+				}
 			}
 		}
 	}
