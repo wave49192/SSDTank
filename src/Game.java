@@ -312,6 +312,10 @@ public class Game extends JFrame {
 				Command c = new CommandShoot(board.getTank2(), bulletPool, bullets);
 				c.execute();
 			}
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				Command c = new CommandShoot(board.getTank1(), bulletPool, bullets);
+				c.execute();
+			}
 			board.setIsStart(true);
 		}
 
