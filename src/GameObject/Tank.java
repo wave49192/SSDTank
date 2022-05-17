@@ -51,4 +51,17 @@ public class Tank extends WObject{
 	public boolean isMoveEast() { return dx == 0 && dy == 1; }
 
 	public boolean isIdle() { return dx == 0 && dy == 0; }
-}
+
+	public Bullet requestBullet(int x, int y, int dx, int dy) {
+		try {
+			Bullet bullet = bullets.remove(0);
+			bullet.refreshState(x, y, dx, dy);
+			return bullet;
+		} catch (IndexOutOfBoundsException e) {
+			size += 1;
+			System.out.println("Current Max Bullet = " + size);
+			Bullet bullet = new Bullet(-999, -999, 0, 0);
+			bullets.add(bullet);
+			return bullet;
+		}
+	}
