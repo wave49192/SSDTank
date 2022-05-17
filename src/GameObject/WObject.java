@@ -1,8 +1,8 @@
 package GameObject;
 
 public abstract class WObject {
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 
 	public WObject(int x, int y) {
 		this.x = x;

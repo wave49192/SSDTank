@@ -13,29 +13,29 @@ public class Tank extends WObject{
 	private int dy;
 
 	public void turnNorth() {
-		dx = -1;
-		dy = 0;
-	}
-
-	public void turnSouth() {
-		dx = 1;
-		dy = 0;
-	}
-
-	public void turnWest() {
 		dx = 0;
 		dy = -1;
 	}
 
-	public void turnEast() {
+	public void turnSouth() {
 		dx = 0;
 		dy = 1;
 	}
 
+	public void turnWest() {
+		dx = -1;
+		dy = 0;
+	}
+
+	public void turnEast() {
+		dx = 1;
+		dy = 0;
+	}
+
 	public void move() {
 		moving = true;
-		setX(getX() + dx);
-		setY(getY() + dy);
+		x += dx;
+		y += dy;
 	}
 
 	public void stop() {
@@ -55,13 +55,13 @@ public class Tank extends WObject{
 		this.moving = moving;
 	}
 
-	public boolean isMoveNorth() { return dx == -1 && dy == 0; }
+	public boolean isMoveNorth() { return dx == 0 && dy == -1; }
 
-	public boolean isMoveSouth() { return dx == 1 && dy == 0; }
+	public boolean isMoveSouth() { return dx == 0 && dy == 1; }
 
-	public boolean isMoveWest() { return dx == 0 && dy == -1; }
+	public boolean isMoveWest() { return dx == -1 && dy == 0; }
 
-	public boolean isMoveEast() { return dx == 0 && dy == 1; }
+	public boolean isMoveEast() { return dx == 1 && dy == 0; }
 
 	public boolean isIdle() { return !moving; }
 }

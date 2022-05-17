@@ -33,11 +33,6 @@ public class Bullet extends WObject {
 		setY(getY() + dy);
 	}
 
-	public void stop() {
-		dx = 0;
-		dy = 0;
-	}
-
 	public void refreshState(Tank tank) {
 		setX(tank.getX());
 		setY(tank.getY());
@@ -53,13 +48,5 @@ public class Bullet extends WObject {
 		if (tank.isMoveWest()) {
 			turnWest();
 		}
-	}
-
-	public int getDx() {
-		return dx;
-	}
-
-	public int getDy() {
-		return dy;
 	}
 }

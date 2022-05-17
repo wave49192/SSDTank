@@ -147,8 +147,8 @@ public class Game extends JFrame {
 		}
 
 		private void paintCell(Graphics g, int row, int col) {
-			int x = col * CELL_PIXEL_SIZE;
-			int y = row * CELL_PIXEL_SIZE;
+			int x = row * CELL_PIXEL_SIZE;
+			int y = col * CELL_PIXEL_SIZE;
 
 			Cell cell = board.getCell(row, col);
 			if (cell.isBush() && cell.isContainTank(board.getTank1())) {
