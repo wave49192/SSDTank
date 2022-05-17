@@ -20,7 +20,6 @@ public class Game extends JFrame {
 	private Thread thread;
 	private BulletPool bulletPool;
 	private List<Bullet> bullets;
-
 	private Board board;
 	private int boardSize = 20;
 	private int barSize = 0;
@@ -28,6 +27,8 @@ public class Game extends JFrame {
 	Sound sound = new Sound();
 
 	public Game() {
+
+
 		controller = new Controller();
 		addKeyListener(controller);
 		board = new Board(boardSize, barSize);
@@ -99,8 +100,9 @@ public class Game extends JFrame {
 			} else if (cell.isSteel()) {
 				toRemove.add(bullet);
 			}
-			for (Tank t : board.getPlayerTanks()) {
-				if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t)) {
+			for (Tank t: board.getPlayerTanks()) {
+				 if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t))
+				{
 					t.setHp(t.getHp() - 1);
 					toRemove.add(bullet);
 				}
@@ -117,6 +119,8 @@ public class Game extends JFrame {
 	}
 
 	class GridUI extends JPanel {
+		private JButton singlePlayerButton;
+		private JButton multiPlayerButton;
 		public static final int CELL_PIXEL_SIZE = 30;
 		private final Image imageBrick;
 		private final Image imageSteel;
@@ -130,6 +134,10 @@ public class Game extends JFrame {
 
 
 		public GridUI() {
+			multiPlayerButton = new JButton("Multiplayer Mode");
+			singlePlayerButton = new JButton("Single Player Mode");
+			add(singlePlayerButton);
+			add(multiPlayerButton);
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
 					(boardSize) * CELL_PIXEL_SIZE));
 			imageTree = new ImageIcon("images/tree.jpg").getImage();
@@ -137,6 +145,7 @@ public class Game extends JFrame {
 			imageSteel = new ImageIcon("images/solid_brick.jpg").getImage();
 			imageBullet = new ImageIcon("images/enemy_bullet.png").getImage();
 			imageDead = new ImageIcon("images/dead.png").getImage();
+
 
 			playerImages.add(new ArrayList<Image>(Arrays.asList(
 					new ImageIcon("images/TankNorth1.png").getImage(),
@@ -171,7 +180,10 @@ public class Game extends JFrame {
 
 			Cell cell = board.getCell(row, col);
 			List<Tank> playerTanks = board.getPlayerTanks();
-			if (cell.isBrick()) {
+			if (cell.isWall()) {
+				g.setColor(Color.darkGray);
+				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
+			} else if (cell.isBrick()) {
 				g.drawImage(imageBrick, x, y, CELL_PIXEL_SIZE,
 						CELL_PIXEL_SIZE, Color.BLACK, null);
 			} else if (cell.isSteel()) {
@@ -235,8 +247,8 @@ public class Game extends JFrame {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				} else {
-					g.drawImage(imageBullet, x + CELL_PIXEL_SIZE / 3, y + CELL_PIXEL_SIZE / 3, CELL_PIXEL_SIZE / 3,
-							CELL_PIXEL_SIZE / 3, Color.BLACK, null);
+					g.drawImage(imageBullet, x+CELL_PIXEL_SIZE/3, y+CELL_PIXEL_SIZE/3, CELL_PIXEL_SIZE/3,
+							CELL_PIXEL_SIZE/3, Color.BLACK, null);
 				}
 			}
 		}
