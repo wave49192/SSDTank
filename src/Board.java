@@ -32,7 +32,7 @@ public class Board {
 		initTree();
 		initTank();
 		initTank2();
-		playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
+		playerTanks = new ArrayList<Tank>(Arrays.asList(tank1,tank2));
 	}
 
 	private void initCells() {

@@ -8,6 +8,8 @@ import command.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class Game extends JFrame {
 	}
 
 	public void setDeadTanks() {
-		for (Tank t: board.getPlayerTanks()) {
+		for (Tank t : board.getPlayerTanks()) {
 			if (t.getHp() <= 0) {
 				t.setDead(true);
 			}
@@ -100,9 +102,8 @@ public class Game extends JFrame {
 			} else if (cell.isSteel()) {
 				toRemove.add(bullet);
 			}
-			for (Tank t: board.getPlayerTanks()) {
-				 if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t))
-				{
+			for (Tank t : board.getPlayerTanks()) {
+				if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t)) {
 					t.setHp(t.getHp() - 1);
 					toRemove.add(bullet);
 				}
@@ -137,7 +138,26 @@ public class Game extends JFrame {
 			multiPlayerButton = new JButton("Multiplayer Mode");
 			singlePlayerButton = new JButton("Single Player Mode");
 			add(singlePlayerButton);
+			singlePlayerButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					singlePlayerButton.setEnabled(false);
+					multiPlayerButton.setEnabled(true);
+					Game.this.requestFocus();
+
+				}
+			});
 			add(multiPlayerButton);
+			multiPlayerButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					singlePlayerButton.setEnabled(true);
+					multiPlayerButton.setEnabled(false);
+
+					Game.this.requestFocus();
+
+				}
+			});
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
 					(boardSize) * CELL_PIXEL_SIZE));
 			imageTree = new ImageIcon("images/tree.jpg").getImage();
@@ -247,8 +267,8 @@ public class Game extends JFrame {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				} else {
-					g.drawImage(imageBullet, x+CELL_PIXEL_SIZE/3, y+CELL_PIXEL_SIZE/3, CELL_PIXEL_SIZE/3,
-							CELL_PIXEL_SIZE/3, Color.BLACK, null);
+					g.drawImage(imageBullet, x + CELL_PIXEL_SIZE / 3, y + CELL_PIXEL_SIZE / 3, CELL_PIXEL_SIZE / 3,
+							CELL_PIXEL_SIZE / 3, Color.BLACK, null);
 				}
 			}
 		}
