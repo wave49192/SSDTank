@@ -1,8 +1,9 @@
+package main;
+
 import GameObject.Bullet;
 import GameObject.BulletPool;
 import GameObject.Cell;
 import GameObject.Tank;
-import audio.Sound;
 import audio.TankAudioController;
 import command.*;
 
@@ -15,35 +16,35 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Game extends JFrame {
-	private GridUI gridUI;
-	private TankAudioController tankAudioController;
-	private Thread thread;
-	private BulletPool bulletPool;
-	private List<Bullet> bullets;
-	private Board board;
-	private int boardSize = 20;
-	private int barSize = 0;
-	private Controller controller;
-	Sound sound = new Sound();
+	private final GridUI gridUI;
+	private final TankAudioController tankAudioController;
+	private final BulletPool bulletPool;
+	private final List<Bullet> bullets;
+	private final Board board;
+	private final int boardSize = 20;
+	private final int barSize = 0;
+	private boolean isMultiplayer;
+	private AI ai;
 
 	public Game() {
-
-
-		controller = new Controller();
+		isMultiplayer = false;
+		Controller controller = new Controller();
 		addKeyListener(controller);
-		board = new Board(boardSize, barSize);
+		board = new Board(boardSize, barSize, isMultiplayer);
+		board.setIsStart(true);
 		bulletPool = new BulletPool();
 		bullets = new ArrayList<>();
 		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
 		tankAudioController.initialSound();
-
 		gridUI = new GridUI();
-		thread = new Thread() {
+		ai = new AI(board.getEnemyTanks(), board, "NoLookingBackwardStrategy");
+		Thread thread = new Thread() {
 			@Override
 			public void run() {
 				while (!board.getIsOver()) {
 					gridUI.repaint();
 					moving();
+					ai.executeStrategy();
 					setDeadTanks();
 					tankAudioController.playTankMovementSound();
 					try {
@@ -66,7 +67,7 @@ public class Game extends JFrame {
 	}
 
 	public void setDeadTanks() {
-		for (Tank t: board.getPlayerTanks()) {
+		for (Tank t: board.getAllTanks()) {
 			if (t.getHp() <= 0) {
 				t.setDead(true);
 			}
@@ -89,7 +90,7 @@ public class Game extends JFrame {
 	}
 
 	private void cleanupBullets() {
-		List<Bullet> toRemove = new ArrayList<Bullet>();
+		List<Bullet> toRemove = new ArrayList<>();
 		for (Bullet bullet : bullets) {
 			Cell cell = board.getCell(bullet.getX(), bullet.getY());
 			if (cell.isWall()) {
@@ -100,7 +101,7 @@ public class Game extends JFrame {
 			} else if (cell.isSteel()) {
 				toRemove.add(bullet);
 			}
-			for (Tank t: board.getPlayerTanks()) {
+			for (Tank t: board.getAllTanks()) {
 				 if (board.getCell(bullet.getX(), bullet.getY()).isContainTank(t))
 				{
 					t.setHp(t.getHp() - 1);
@@ -109,10 +110,9 @@ public class Game extends JFrame {
 			}
 		}
 		if (!toRemove.isEmpty()) {
-
-			for (Bullet bullet2 : toRemove) {
-				bullets.remove(bullet2);
-				bulletPool.releaseBullet(bullet2);
+			for (Bullet bullet : toRemove) {
+				bullets.remove(bullet);
+				bulletPool.releaseBullet(bullet);
 			}
 		}
 
@@ -128,10 +128,7 @@ public class Game extends JFrame {
 		private final Image imageBullet;
 		private final Image imageDead;
 		private List<List<Image>> playerImages = new ArrayList<>();
-
-		private Image lastTank1Move;
-		private Image lastTank2Move;
-
+		private List<Image> enemyImages;
 
 		public GridUI() {
 			multiPlayerButton = new JButton("Multiplayer Mode");
@@ -147,18 +144,24 @@ public class Game extends JFrame {
 			imageDead = new ImageIcon("images/dead.png").getImage();
 
 
-			playerImages.add(new ArrayList<Image>(Arrays.asList(
+			playerImages.add(new ArrayList<>(Arrays.asList(
 					new ImageIcon("images/TankNorth1.png").getImage(),
 					new ImageIcon("images/TankSouth1.png").getImage(),
 					new ImageIcon("images/TankWest1.png").getImage(),
 					new ImageIcon("images/TankEast1.png").getImage()
 			)));
-			playerImages.add(new ArrayList<Image>(Arrays.asList(
+			playerImages.add(new ArrayList<>(Arrays.asList(
 					new ImageIcon("images/TankNorth2.png").getImage(),
 					new ImageIcon("images/TankSouth2.png").getImage(),
 					new ImageIcon("images/TankWest2.png").getImage(),
 					new ImageIcon("images/TankEast2.png").getImage()
 			)));
+			enemyImages = Arrays.asList(
+					new ImageIcon("images/EnemyNorth.png").getImage(),
+					new ImageIcon("images/EnemySouth.png").getImage(),
+					new ImageIcon("images/EnemyWest.png").getImage(),
+					new ImageIcon("images/EnemyEast.png").getImage()
+			);
 		}
 
 		@Override
@@ -180,6 +183,7 @@ public class Game extends JFrame {
 
 			Cell cell = board.getCell(row, col);
 			List<Tank> playerTanks = board.getPlayerTanks();
+			List<Tank> enemyTanks = board.getEnemyTanks();
 			if (cell.isWall()) {
 				g.setColor(Color.darkGray);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
@@ -212,6 +216,8 @@ public class Game extends JFrame {
 				} else if (cell.isBush() && cell.isContainTank(t)) {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
+					g.drawImage(playerImages.get(i).get(0), x, y, CELL_PIXEL_SIZE / 2,
+							CELL_PIXEL_SIZE / 2, Color.BLACK, null);
 				} else if (cell.isContainTank(t)) {
 					if (!board.getIsStart()) {
 						g.drawImage(playerImages.get(i).get(0), x, y, CELL_PIXEL_SIZE,
@@ -231,6 +237,45 @@ public class Game extends JFrame {
 					}
 					if (t.isMoveEast()) {
 						g.drawImage(playerImages.get(i).get(3), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+				}
+			}
+			for (Tank t: enemyTanks) {
+				if (t.isDead()) {
+					int deadX = t.getX() * CELL_PIXEL_SIZE;
+					int deadY = t.getY() * CELL_PIXEL_SIZE;
+					g.drawImage(imageDead, deadX, deadY, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+					continue;
+				}
+				if (cell.isBush() && cell.isContainTank(t)) {
+					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+				} else if (cell.isBush() && cell.isContainTank(t)) {
+					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
+							CELL_PIXEL_SIZE, Color.BLACK, null);
+					g.drawImage(enemyImages.get(0), x, y, CELL_PIXEL_SIZE / 2,
+							CELL_PIXEL_SIZE / 2, Color.BLACK, null);
+				} else if (cell.isContainTank(t)) {
+					if (!board.getIsStart()) {
+						g.drawImage(enemyImages.get(0), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveNorth()) {
+						g.drawImage(enemyImages.get(0), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveSouth()) {
+						g.drawImage(enemyImages.get(1), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveWest()) {
+						g.drawImage(enemyImages.get(2), x, y, CELL_PIXEL_SIZE,
+								CELL_PIXEL_SIZE, Color.BLACK, null);
+					}
+					if (t.isMoveEast()) {
+						g.drawImage(enemyImages.get(3), x, y, CELL_PIXEL_SIZE,
 								CELL_PIXEL_SIZE, Color.BLACK, null);
 					}
 				}

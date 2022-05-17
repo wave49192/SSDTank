@@ -1,3 +1,5 @@
+package main;
+
 import GameObject.*;
 
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ public class Board {
 	private Tank tank1;
 	private Tank tank2;
 	private List<Tank> playerTanks;
+	private List<Tank> enemyTanks;
+	private List<Tank> allTanks;
 	private final Random random = new Random();
 
 	private boolean isOver;
@@ -21,7 +25,7 @@ public class Board {
 		this.cells[x][y] = new Cell(x, y);
 	}
 
-	public Board(int size, int barSize) {
+	public Board(int size, int barSize, boolean isMultiplayer) {
 		this.size = size;
 		this.barSize = barSize;
 		isOver = false;
@@ -32,7 +36,16 @@ public class Board {
 		initTree();
 		initTank();
 		initTank2();
-		playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
+		allTanks = new ArrayList<Tank>();
+		if (isMultiplayer) {
+			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1, tank2));
+			allTanks.addAll(playerTanks);
+		}
+		else {
+			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
+			enemyTanks = new ArrayList<Tank>(Arrays.asList(new Tank(size / 2, size / 2)));
+			allTanks.addAll(enemyTanks);
+		}
 	}
 
 	private void initCells() {
@@ -110,8 +123,8 @@ public class Board {
 	}
 
 	public void moveTank() {
-		for (Tank t1: playerTanks) {
-			if (playerTanks.size() == 2) {
+		for (Tank t1: allTanks) {
+			if (allTanks.size() > 1) {
 				for (Tank t2 : playerTanks) {
 					if (t1 != t2 && canMoveTank(t1) && !collideTank(t1, t2) && !t1.isIdle()) {
 						t1.move();
@@ -132,8 +145,16 @@ public class Board {
 		return cells[row][col];
 	}
 
+	public List<Tank> getEnemyTanks() {
+		return enemyTanks;
+	}
+
 	public List<Tank> getPlayerTanks() {
 		return playerTanks;
+	}
+
+	public List<Tank> getAllTanks() {
+		return allTanks;
 	}
 
 	public boolean getIsOver() {
