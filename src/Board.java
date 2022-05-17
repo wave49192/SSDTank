@@ -85,10 +85,10 @@ public class Board {
 
 	private void initWall() {
 		for (int i = 0; i <= size - 1; i++) {
-			cells[1][i] = new Wall(1, i);
-			cells[size][i] = new Wall(size, i);
-			cells[i + 1][0] = new Wall(i + 1, 0);
-			cells[i + 1][size - 1] = new Wall(i + 1, size - 1);
+			cells[0][i] = new Wall(1, i);//แนวตั้งซ้าย
+			cells[size-1][i] = new Wall(size, i);
+			cells[i ][0] = new Wall(i + 1, 0);
+			cells[i ][size - 1] = new Wall(i + 1, size - 1);
 		}
 	}
 
