@@ -21,7 +21,7 @@ public class Game extends JFrame {
 
 	private Board board;
 	private int boardSize = 20;
-	private int barSize = 1;
+	private int barSize = 0;
 	private Controller controller;
 	Sound sound = new Sound();
 
@@ -126,7 +126,7 @@ public class Game extends JFrame {
 
 		public GridUI() {
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
-					(boardSize + barSize) * CELL_PIXEL_SIZE));
+					(boardSize) * CELL_PIXEL_SIZE));
 			imageBrick = new ImageIcon("images/break_brick.jpg").getImage();
 			imageSteel = new ImageIcon("images/solid_brick.jpg").getImage();
 			imageBullet = new ImageIcon("images/enemy_bullet.png").getImage();
@@ -149,7 +149,7 @@ public class Game extends JFrame {
 			super.paint(g);
 
 			g.drawString("Tank Game", 10, 20);
-			for (int row = barSize; row < boardSize + barSize; ++row) {
+			for (int row = barSize; row < boardSize; ++row) {
 				for (int col = 0; col < boardSize; ++col) {
 					paintCell(g, row, col);
 				}
