@@ -31,10 +31,6 @@ public class TankAudioController extends Sound {
                 setFile("moving");
                 play();
                 previousSound = "moving";
-            } else if (tank.isDead()) {
-                stop();
-                setFile("dead");
-                play();
             }
         }
     }
