@@ -11,6 +11,7 @@ public class Board {
 	private Cell[][] cells;
 	private final int size;
 	private final int barSize;
+	private AI ai;
 	private Tank tank1;
 	private Tank tank2;
 	private List<Tank> playerTanks;
@@ -44,6 +45,7 @@ public class Board {
 		else {
 			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
 			enemyTanks = new ArrayList<Tank>(Arrays.asList(new Tank(size / 2, size / 2)));
+			ai = new AI(enemyTanks, this, "RandomStrategy");
 		}
 		allTanks.addAll(playerTanks);
 		allTanks.addAll(enemyTanks);
@@ -144,6 +146,10 @@ public class Board {
 			return null;
 		}
 		return cells[row][col];
+	}
+
+	public AI getAi() {
+		return ai;
 	}
 
 	public List<Tank> getEnemyTanks() {

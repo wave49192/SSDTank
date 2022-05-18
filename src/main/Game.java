@@ -25,7 +25,6 @@ public class Game extends JFrame {
 	private Board board;
 	private final int boardSize = 20;
 	private final int barSize = 0;
-	private AI ai;
 
 	public Game() {
 		Controller controller = new Controller();
@@ -36,14 +35,14 @@ public class Game extends JFrame {
 //		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
 //		tankAudioController.initialSound();
 		gridUI = new GridUI();
-		ai = new AI(board.getEnemyTanks(), board, "RandomStrategy");
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
 				while (!board.getIsOver()) {
 					gridUI.repaint();
 					moving();
-					ai.executeStrategy();
+					if (board.getAi() != null){
+					board.getAi().executeStrategy();}
 					setDeadTanks();
 //					tankAudioController.playTankMovementSound();
 					try {
@@ -158,9 +157,10 @@ public class Game extends JFrame {
 			multiPlayerButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					startButton.setEnabled(true);
 					singlePlayerButton.setEnabled(true);
 					multiPlayerButton.setEnabled(false);
-					startButton.setEnabled(true);
+
 					board = new Board(boardSize, barSize, true);
 					start();
 				}
