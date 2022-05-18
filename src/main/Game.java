@@ -43,8 +43,8 @@ public class Game extends JFrame {
 				while (!board.getIsOver()) {
 					gridUI.repaint();
 					moving();
-					setDeadTanks();
 					ai.executeStrategy();
+					setDeadTanks();
 //					tankAudioController.playTankMovementSound();
 					try {
 						Thread.sleep(100);
@@ -54,21 +54,7 @@ public class Game extends JFrame {
 				}
 			}
 		};
-		Thread strategyThread = new Thread() {
-			@Override
-			public void run() {
-				while (!board.getIsOver()) {
-					ai.executeStrategy();
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		};
 		thread.start();
-		strategyThread.start();
 		add(gridUI);
 		pack();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -298,11 +284,6 @@ public class Game extends JFrame {
 				if (cell.isBush() && cell.isContainTank(t)) {
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
-				} else if (cell.isBush() && cell.isContainTank(t)) {
-					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
-							CELL_PIXEL_SIZE, Color.BLACK, null);
-					g.drawImage(enemyImages.get(0), x, y, CELL_PIXEL_SIZE / 2,
-							CELL_PIXEL_SIZE / 2, Color.BLACK, null);
 				} else if (cell.isContainTank(t)) {
 					if (!board.getIsStart()) {
 						g.drawImage(enemyImages.get(0), x, y, CELL_PIXEL_SIZE,

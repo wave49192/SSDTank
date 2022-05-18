@@ -40,7 +40,6 @@ public class Board {
 		if (isMultiplayer) {
 			playerTanks = new ArrayList<>(Arrays.asList(tank1, tank2));
 			enemyTanks = new ArrayList<>();
-			System.out.println("Mult");
 		}
 		else {
 			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
