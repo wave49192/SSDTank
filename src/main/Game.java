@@ -36,7 +36,7 @@ public class Game extends JFrame {
 //		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
 //		tankAudioController.initialSound();
 		gridUI = new GridUI();
-		ai = new AI(board.getEnemyTanks(), board, "NoLookingBackwardStrategy");
+		ai = new AI(board.getEnemyTanks(), board, "RandomStrategy");
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
@@ -146,6 +146,7 @@ public class Game extends JFrame {
 			singlePlayerButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					startButton.setEnabled(true);
 					singlePlayerButton.setEnabled(false);
 					multiPlayerButton.setEnabled(true);
 
@@ -159,7 +160,7 @@ public class Game extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					singlePlayerButton.setEnabled(true);
 					multiPlayerButton.setEnabled(false);
-
+					startButton.setEnabled(true);
 					board = new Board(boardSize, barSize, true);
 					start();
 				}

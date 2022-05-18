@@ -75,7 +75,7 @@ public class Board {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
-			if (!cell.isWall() && !cell.isBrick()) {
+			if (!cell.isWall() && !cell.isBrick() && row != size / 2 && col != size / 2) {
 				cells[row][col] = new Brick(row, col);
 			}
 		}
@@ -86,7 +86,7 @@ public class Board {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
-			if (!cell.isWall() && !cell.isBrick()) {
+			if (!cell.isWall() && !cell.isBrick()&& row != size / 2 && col != size / 2) {
 				cells[row][col] = new Steel(row, col);
 			}
 		}
@@ -97,7 +97,7 @@ public class Board {
 			int row = random.nextInt(size) + barSize;
 			int col = random.nextInt(size);
 			Cell cell = getCell(row, col);
-			if (!cell.isWall() && !cell.isBrick() && !cell.isSteel()) {
+			if (!cell.isWall() && !cell.isBrick() && !cell.isSteel()&& row != size / 2 && col != size / 2) {
 				cells[row][col] = new Bush(row, col);
 			}
 		}

@@ -2,7 +2,7 @@ package main;
 
 import GameObject.Tank;
 import main.Board;
-import strategy.NoLookingBackwardStrategy;
+import strategy.RandomStrategy;
 import strategy.Strategy;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public class AI {
         this.tanks = tank;
         this.board = board;
 
-        if (strategyName.equals("NoLookingBackwardStrategy")) {
-            this.strategy = new NoLookingBackwardStrategy();
+        if (strategyName.equals("RandomStrategy")) {
+            this.strategy = new RandomStrategy();
         }
     }
 
