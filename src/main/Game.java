@@ -148,10 +148,9 @@ public class Game extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					singlePlayerButton.setEnabled(false);
 					multiPlayerButton.setEnabled(true);
-					Game.this.dispose();
-					Game game = new Game();
+
 					board = new Board(boardSize, barSize, false);
-					game.start();
+					start();
 				}
 			});
 			add(multiPlayerButton);
@@ -161,10 +160,8 @@ public class Game extends JFrame {
 					singlePlayerButton.setEnabled(true);
 					multiPlayerButton.setEnabled(false);
 
-					Game.this.dispose();
-					Game game = new Game();
 					board = new Board(boardSize, barSize, true);
-					game.start();
+					start();
 				}
 			});
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
