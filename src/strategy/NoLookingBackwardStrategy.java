@@ -11,7 +11,10 @@ public class NoLookingBackwardStrategy implements Strategy {
     public void execute(List<Tank> tanks, Board board) {
         for (Tank tank : tanks) {
             if (!board.canMoveTank(tank)) {
-                        tank.turnEast();
+                tank.turnEast();
+            }
+            else {
+                tank.turnNorth();
             }
         }
     };

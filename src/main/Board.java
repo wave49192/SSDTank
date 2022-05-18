@@ -45,7 +45,6 @@ public class Board {
 			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
 			enemyTanks = new ArrayList<Tank>(Arrays.asList(new Tank(size / 2, size / 2)));
 		}
-
 		allTanks.addAll(playerTanks);
 		allTanks.addAll(enemyTanks);
 	}
