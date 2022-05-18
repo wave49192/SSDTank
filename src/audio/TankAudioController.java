@@ -2,14 +2,15 @@ package audio;
 
 import GameObject.Tank;
 
+import java.util.List;
 import java.util.Objects;
 
 public class TankAudioController extends Sound {
-    private Tank tank;
+    private List<Tank> tanks;
     private String previousSound;
 
-    public TankAudioController(Tank tank) {
-        this.tank = tank;
+    public TankAudioController(List<Tank> tank) {
+        this.tanks = tank;
     }
 
     public void initialSound() {
@@ -19,17 +20,22 @@ public class TankAudioController extends Sound {
     }
 
     public void playTankMovementSound() {
-        if (tank.isIdle() && !Objects.equals(previousSound, "idling")) {
-            stop();
-            setFile("idling");
-            play();
-            previousSound = "idling";
-        }
-        else if (!tank.isIdle() && !Objects.equals(previousSound, "moving")) {
-            stop();
-            setFile("moving");
-            play();
-            previousSound = "moving";
+        for (Tank tank: tanks) {
+            if (tank.getPlayerNumber() > 0 && tank.isIdle() && !Objects.equals(previousSound, "idling")) {
+                stop();
+                setFile("idling");
+                play();
+                previousSound = "idling";
+            } else if (tank.getPlayerNumber() > 0 && !tank.isIdle() && !Objects.equals(previousSound, "moving")) {
+                stop();
+                setFile("moving");
+                play();
+                previousSound = "moving";
+            } else if (tank.isDead()) {
+                stop();
+                setFile("dead");
+                play();
+            }
         }
     }
 }

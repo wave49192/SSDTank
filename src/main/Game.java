@@ -19,7 +19,6 @@ import java.util.List;
 
 public class Game extends JFrame {
 	private final GridUI gridUI;
-//	private final TankAudioController tankAudioController;
 	private final BulletPool bulletPool;
 	private final List<Bullet> bullets;
 	private Board board;
@@ -32,8 +31,7 @@ public class Game extends JFrame {
 		board = new Board(boardSize, barSize, false);
 		bulletPool = new BulletPool();
 		bullets = new ArrayList<>();
-//		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
-//		tankAudioController.initialSound();
+
 		gridUI = new GridUI();
 		Thread thread = new Thread() {
 			@Override
@@ -42,9 +40,9 @@ public class Game extends JFrame {
 					gridUI.repaint();
 					moving();
 					if (board.getAi() != null){
-					board.getAi().executeStrategy();}
+						board.getAi().executeStrategy();
+					}
 					setDeadTanks();
-//					tankAudioController.playTankMovementSound();
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {

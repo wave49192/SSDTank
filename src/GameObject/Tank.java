@@ -15,6 +15,11 @@ public class Tank extends WObject{
 		dead = false;
 	}
 
+	public Tank(int x, int y, int playerNumber) {
+		this(x, y);
+		this.playerNumber = playerNumber;
+	}
+
 	private int dx;
 	private int dy;
 

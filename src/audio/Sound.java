@@ -15,6 +15,7 @@ public class Sound {
         sounds = new HashMap<>();
         sounds.put("idling", "sounds/idling.wav");
         sounds.put("moving", "sounds/moving.wav");
+        sounds.put("dead", "sounds/dead.wav");
     }
 
     public void setFile(String sound) {

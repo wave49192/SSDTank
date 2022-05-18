@@ -1,6 +1,7 @@
 package main;
 
 import GameObject.*;
+import audio.TankAudioController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,8 @@ public class Board {
 	private final int size;
 	private final int barSize;
 	private AI ai;
+	private final TankAudioController playerTankAudioController;
+	private TankAudioController enemyTankAudioController;
 	private Tank tank1;
 	private Tank tank2;
 	private List<Tank> playerTanks;
@@ -44,11 +47,14 @@ public class Board {
 		}
 		else {
 			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
-			enemyTanks = new ArrayList<Tank>(Arrays.asList(new Tank(size / 2, size / 2)));
+			enemyTanks = new ArrayList<Tank>(Arrays.asList(new Tank(size / 2, size / 2), new Tank(size - 2, size - 2)));
 			ai = new AI(enemyTanks, this, "RandomStrategy");
+			enemyTankAudioController = new TankAudioController(enemyTanks);
 		}
 		allTanks.addAll(playerTanks);
 		allTanks.addAll(enemyTanks);
+		playerTankAudioController = new TankAudioController(playerTanks);
+		playerTankAudioController.initialSound();
 	}
 
 	private void initCells() {
@@ -61,11 +67,11 @@ public class Board {
 	}
 
 	private void initTank() {
-		tank1 = new Tank(1, size - 2);
+		tank1 = new Tank(1, size - 2, 1);
 	}
 
 	private void initTank2() {
-		tank2 = new Tank(1, 1);
+		tank2 = new Tank(1, 1, 2);
 	}
 
 	private boolean hasTank(Cell cell) {
@@ -131,6 +137,7 @@ public class Board {
 				for (Tank t2 : allTanks) {
 					if (t1 != t2 && canMoveTank(t1) && !collideTank(t1, t2) && !t1.isIdle()) {
 						t1.move();
+						break;
 					}
 				}
 			} else {
@@ -138,6 +145,10 @@ public class Board {
 					t1.move();
 				}
 			}
+		}
+		playerTankAudioController.playTankMovementSound();
+		if (enemyTankAudioController != null) {
+			enemyTankAudioController.playTankMovementSound();
 		}
 	}
 
@@ -170,6 +181,10 @@ public class Board {
 
 	public boolean getIsStart() {
 		return isStart;
+	}
+
+	public TankAudioController getPlayerTankAudioController() {
+		return playerTankAudioController;
 	}
 
 	public void setIsStart(boolean isStartValue) {
