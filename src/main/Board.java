@@ -38,14 +38,17 @@ public class Board {
 		initTank2();
 		allTanks = new ArrayList<Tank>();
 		if (isMultiplayer) {
-			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1, tank2));
-			allTanks.addAll(playerTanks);
+			playerTanks = new ArrayList<>(Arrays.asList(tank1, tank2));
+			enemyTanks = new ArrayList<>();
+			System.out.println("Mult");
 		}
 		else {
 			playerTanks = new ArrayList<Tank>(Arrays.asList(tank1));
 			enemyTanks = new ArrayList<Tank>(Arrays.asList(new Tank(size / 2, size / 2)));
-			allTanks.addAll(enemyTanks);
 		}
+
+		allTanks.addAll(playerTanks);
+		allTanks.addAll(enemyTanks);
 	}
 
 	private void initCells() {
@@ -125,7 +128,7 @@ public class Board {
 	public void moveTank() {
 		for (Tank t1: allTanks) {
 			if (allTanks.size() > 1) {
-				for (Tank t2 : playerTanks) {
+				for (Tank t2 : allTanks) {
 					if (t1 != t2 && canMoveTank(t1) && !collideTank(t1, t2) && !t1.isIdle()) {
 						t1.move();
 					}

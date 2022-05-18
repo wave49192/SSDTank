@@ -10,10 +10,10 @@ public class NoLookingBackwardStrategy implements Strategy {
     @Override
     public void execute(List<Tank> tanks, Board board) {
         for (Tank tank : tanks) {
-                    while (!board.canMoveTank(tank)) {
+            while (!board.canMoveTank(tank)) {
                         tank.turnEast();
-                    }
-                    tank.move();
-                }
-        };
+            }
+            tank.move();
+        }
+    };
 }

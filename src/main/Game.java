@@ -19,24 +19,22 @@ import java.util.List;
 
 public class Game extends JFrame {
 	private final GridUI gridUI;
-	private final TankAudioController tankAudioController;
+//	private final TankAudioController tankAudioController;
 	private final BulletPool bulletPool;
 	private final List<Bullet> bullets;
-	private final Board board;
+	private Board board;
 	private final int boardSize = 20;
 	private final int barSize = 0;
-	private boolean isMultiplayer;
 	private AI ai;
 
 	public Game() {
-		isMultiplayer = false;
 		Controller controller = new Controller();
 		addKeyListener(controller);
-		board = new Board(boardSize, barSize, isMultiplayer);
+		board = new Board(boardSize, barSize, false);
 		bulletPool = new BulletPool();
 		bullets = new ArrayList<>();
-		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
-		tankAudioController.initialSound();
+//		tankAudioController = new TankAudioController(board.getPlayerTanks().get(0));
+//		tankAudioController.initialSound();
 		gridUI = new GridUI();
 		ai = new AI(board.getEnemyTanks(), board, "NoLookingBackwardStrategy");
 		Thread thread = new Thread() {
@@ -45,9 +43,22 @@ public class Game extends JFrame {
 				while (!board.getIsOver()) {
 					gridUI.repaint();
 					moving();
-					ai.executeStrategy();
 					setDeadTanks();
-					tankAudioController.playTankMovementSound();
+					ai.executeStrategy();
+//					tankAudioController.playTankMovementSound();
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		Thread strategyThread = new Thread() {
+			@Override
+			public void run() {
+				while (!board.getIsOver()) {
+					ai.executeStrategy();
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -57,6 +68,7 @@ public class Game extends JFrame {
 			}
 		};
 		thread.start();
+		strategyThread.start();
 		add(gridUI);
 		pack();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -152,9 +164,8 @@ public class Game extends JFrame {
 					multiPlayerButton.setEnabled(true);
 					Game.this.dispose();
 					Game game = new Game();
-					game.isMultiplayer = false;
+					board = new Board(boardSize, barSize, false);
 					game.start();
-
 				}
 			});
 			add(multiPlayerButton);
@@ -166,9 +177,8 @@ public class Game extends JFrame {
 
 					Game.this.dispose();
 					Game game = new Game();
-					game.isMultiplayer = true;
+					board = new Board(boardSize, barSize, true);
 					game.start();
-
 				}
 			});
 			setPreferredSize(new Dimension(boardSize * CELL_PIXEL_SIZE,
@@ -237,7 +247,7 @@ public class Game extends JFrame {
 				g.setColor(Color.black);
 				g.fillRect(x, y, CELL_PIXEL_SIZE, CELL_PIXEL_SIZE);
 			}
-			for (int i = 0; i < board.getPlayerTanks().size(); ++i) {
+			for (int i = 0; i < playerTanks.size(); ++i) {
 				Tank t = playerTanks.get(i);
 				if (t.isDead()) {
 					int deadX = t.getX() * CELL_PIXEL_SIZE;
@@ -324,7 +334,6 @@ public class Game extends JFrame {
 				int y = b.getY() * CELL_PIXEL_SIZE;
 
 				if (board.getCell(b.getX(), b.getY()).isBush()) {
-
 					g.drawImage(imageTree, x, y, CELL_PIXEL_SIZE,
 							CELL_PIXEL_SIZE, Color.BLACK, null);
 				} else {
